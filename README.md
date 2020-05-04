@@ -12,12 +12,12 @@
 * 4 spaces on tab
 * single quotes on everything except template literal
 * if you're not sure if you should use `const` or `let`...use `const`
-..* ...but absolutely no `var`'s
+  * ...but absolutely no `var`'s
 * snake-case everything that isn't a variable name
-..* variable names will be camelCased
+  * variable names will be camelCased
 * props go on subsequent lines with no indentation regardless of how many are being passed in
-..* Ex:
-.... ```javascript
+  * Ex:
+```javascript
 <Home
 name={name}
 >
