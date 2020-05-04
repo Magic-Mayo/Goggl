@@ -1,0 +1,14 @@
+{
+  "name": "goggle",
+  "version": "0.0.1",
+  "description": "Word finding game",
+  "main": "server.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Mike Mayo",
+  "license": "ISC",
+  "dependencies": {
+    "socket.io": "^2.3.0"
+  }
+}
