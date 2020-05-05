@@ -1,14 +1,17 @@
-import React from 'react';
-import { Route } from 'react-router-dom';
+import React, { useRef } from 'react';
+import {Route} from 'react-router-dom';
 import NavBar from './components/NavBar';
 import Home from './pages/Home';
+import io from 'socket.io-client';
 
 const App = () => {
+    const {current: socket} = useRef(io(':3001'));
+
     return (
         <>
             <NavBar />
             <Route exact path='/'>
-                <Home />
+                <Home socket={socket}/>
             </Route>
         </>
     );

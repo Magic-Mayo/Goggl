@@ -10,4 +10,5 @@ export default styled.nav`
     height: 80px;
     overflow: hidden;
     z-index: 1000;
+    top: 0;
 `
