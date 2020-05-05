@@ -9,7 +9,7 @@ const App = () => {
 
     return (
         <>
-            <NavBar />
+            <NavBar/>
             <Route exact path='/'>
                 <Home socket={socket}/>
             </Route>
