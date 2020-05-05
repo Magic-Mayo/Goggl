@@ -4,8 +4,9 @@ module.exports = socket => {
     // set username
     socket.on('set-username', (username, confirm) => {
         socket.username = username;
-        confirm(`You are now connected as ${socket.username}`)
+        confirm(socket.username)
     });
+
     // create room
     socket.on('create-room', (room, join) => {
         if(rooms.includes(room)) {
@@ -16,6 +17,7 @@ module.exports = socket => {
             socket.join(room);
         }
     });
+
     // join room
     socket.on('join-room', (room, create) => {
         if(rooms.includes(room)){
@@ -30,11 +32,12 @@ module.exports = socket => {
 
     // send messages
     socket.on('chat', msg => {
-        socket.broadcast.emit('chat', {msg: msg, user: socket.username});
+        console.log(socket.broadcast.emit)
+        socket.broadcast.emit('chat', {username: socket.username, msg: msg});
     });
-    // create username
 
-    socket.on("disconnect", () => {
-        socket.broadcast.emit(`${socket.username} has left the room`)
+    socket.on('disconnect', () => {
+        socket.broadcast.emit('user-disconnect', `${socket.username} has disconnected`);
+        socket.emit('You have disconnected')
     });
 }
