@@ -9,6 +9,7 @@ export default styled.button`
     box-shadow: ${props => props.boxShadow ? '#444 7px 5px 15px' : ''};
     border: ${({border}) => border || 'none'};
     font-size: ${({fontS}) => fontS || '30px'};
+    font-weight: ${({fontW}) => fontW || ''};
     justify-content: ${({justifyContent}) => justifyContent || ''};
     display: ${({disp}) => disp || ''};
     padding: ${({padding}) => padding || '5px'};
@@ -28,7 +29,6 @@ export default styled.button`
     top: ${({top}) => top || ''};
     flex-direction: ${({flexDirection}) => flexDirection || ''};
     right: ${({right}) => right || ''};
-    transition: transform .9s .05s;
 
     &:focus {
         outline: none;
