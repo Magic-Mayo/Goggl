@@ -3,6 +3,7 @@
 * make sure you pull from the repo you are working in before doing any actual coding
 * if you are working on a new feature/area, create a new branch from test
 * if you are finished working on a feature/area submit a PR to test
+  * when a PR is submitted we will review together and go over what was changed and make sure it works
 
 # Structure of app
 * use hooks(no class-based components)
@@ -22,3 +23,5 @@
 name={name}
 >
 ```
+* single parameter functions will have no parens
+* ES6 syntax
