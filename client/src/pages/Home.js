@@ -1,20 +1,25 @@
 import React, {useState} from 'react';
 import {Wrapper, Input, Button} from '../components/styledComponents';
-import ChatBox from '../components/ChatBox';
+import { useHistory } from 'react-router-dom';
 
-const Home = ({socket}) => {
-    const [username, setUsername] = useState('');
+
+const Home = ({socket, setUsername}) => {
+    const history = useHistory();
+    const [input, setInput] = useState('');
     
     const handleUsername = () => {
-        socket.emit('set-username', username, chat => setUsername(chat))
+        socket.emit('set-username', input, chat => {
+            setUsername(chat);
+            history.push('/game');
+        });
     }
 
     return (
         <Wrapper margin='80px 0 0 0'>
             <Wrapper>
                 <Input
-                onChange={e => setUsername(e.target.value)}
-                value={username}
+                onChange={e => setInput(e.target.value)}
+                value={input}
                 />
                 <Button
                 type='button'
@@ -22,13 +27,6 @@ const Home = ({socket}) => {
                 >
                     Send name
                 </Button>
-            </Wrapper>
-
-            <Wrapper>
-                <ChatBox
-                socket={socket}
-                username={username}
-                />
             </Wrapper>
         </Wrapper>
     )
