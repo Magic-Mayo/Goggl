@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {Wrapper, Form, Input, P, Button} from '../styledComponents';
+import {Wrapper, Form, Input, P} from '../styledComponents';
 
 const ChatBox = ({socket, username}) => {
     const [chat, setChat] = useState([]);
@@ -21,38 +21,52 @@ const ChatBox = ({socket, username}) => {
         <>
             <Wrapper
             flexDirection='column'
+            alignItems='flex-end'
+            w='350px'
             >
 
                 <Wrapper
-                w='300px'
-                h='600px'
+                w='400px'
+                h='700px'
                 border=' 2px solid #ccc'
-                margin='50px 0'
+                margin='20px 0'
                 flexDirection='column'
                 justifyContent='flex-start'
-                alignItems='flex-start'
-                padding='0 5px'
+                bgColor='#dde'
                 >
                     {chat &&
                         chat.map((chat, ind) => (
-                            <P
+                            <Wrapper
                             key={ind}
-                            w='100%'
-                            textAlign={chat.username === username ? 'right' : 'left'}
+                            position='relative'
+                            transform={chat.username === username ? 'translateX(70px)' : ''}
+                            w='80%'
+                            borderRadius='10%'
+                            margin='5px'
+                            padding='0 7px'
+                            bgColor={chat.username === username ? '#2fc' : '#cf2'}
+                            justifyContent={chat.username === username ? 'flex-end' : 'flex-start'}
                             >
-                                {chat.username}: {chat.msg}
-                            </P>
+                                <P
+                                margin='5px'
+                                fontColor={chat.username !== username ? '#000' : '#f3a'}
+                                >
+                                    {chat.username !== username ? `${chat.username}: ${chat.msg}` : chat.msg}
+                                </P>
+                            </Wrapper>
                         ))
                     }
                 </Wrapper>
 
                 <Form
                 onSubmit={e => handleChat(e)}
+                alignItems='flex-end'
                 >
                     <Input
                     placeholder='Enter chat'
                     onChange={e => setInput(e.target.value)}
                     value={input}
+                    margin='0'
                     />
                 </Form>
             </Wrapper>
