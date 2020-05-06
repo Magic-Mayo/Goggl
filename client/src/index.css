@@ -5,7 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: url('alphabet-background.jpg') no-repeat;
+  background: url('magazine.png') no-repeat;
   background-size: cover;
   background-position: 0;
 }
