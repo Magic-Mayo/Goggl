@@ -18,12 +18,12 @@ const Home = ({socket, setUsername}) => {
             return setInput();
         }
         
-        socket.emit('set-username', input.username, chat => {
-            setUsername(chat);
-
+        socket.emit('set-username', input.username, username => {
+            setUsername(username);
             socket.emit('join-room', input.room, create => {
                 if(create){
-                    return setModal(create);
+                    setInput(prevInput => ({...prevInput, room: create.room}))
+                    return setModal(create.msg);
                 }
                 
                 history.push('/game');
@@ -36,12 +36,13 @@ const Home = ({socket, setUsername}) => {
         if(!input.username){
             return setInput();
         }
-
-        socket.emit('set-username', input.username, chat => {
-            setUsername(chat);
+        
+        socket.emit('set-username', input.username, username => {
+            setUsername(username);
             socket.emit('create-room', input.room, join => {
                 if(join){
-                    return setModal(join);
+                    setInput(prevInput => ({...prevInput, room: join.room}))
+                    return setModal(join.msg);
                 }
 
                 history.push('/game');
@@ -51,7 +52,6 @@ const Home = ({socket, setUsername}) => {
 
     const handleInput = e => {
         const {name, value} = e.target;
-
         setInput(prevInput => ({...prevInput, [name]: value}))
     }
 
@@ -79,7 +79,11 @@ const Home = ({socket, setUsername}) => {
             }
             <Wrapper
             flexDirection='column'
-
+            bgColor='rgba(50,50,50,.7)'
+            w='40vw'
+            h='50vh'
+            alignItems='center'
+            borderRadius='10px'
             >
                 <Label
                 htmlFor='username'
