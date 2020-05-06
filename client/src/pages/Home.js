@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Wrapper, Input, Button, P} from '../components/styledComponents';
+import {Wrapper, Input, Button, P, Label} from '../components/styledComponents';
 import {useHistory} from 'react-router-dom';
 import Modal from '../components/Modal';
 
@@ -56,7 +56,10 @@ const Home = ({socket, setUsername}) => {
     }
 
     return (
-        <Wrapper margin='80px 0 0 0'>
+        <Wrapper
+        h='100vh'
+        alignItems='center'
+        >
             {modal && 
                 <Modal>
                     <P
@@ -74,18 +77,57 @@ const Home = ({socket, setUsername}) => {
                     </Button>
                 </Modal>
             }
-            <Wrapper>
+            <Wrapper
+            flexDirection='column'
+
+            >
+                <Label
+                htmlFor='username'
+                fontS='32px'
+                >
+                    Enter username
+                </Label>
                 <Input
+                placeholder={`If you don't enter one I will for you ;)`}
                 onChange={e => handleInput(e)}
                 value={input.username}
                 name='username'
                 />
-                <Button
-                type='button'
-                onClick={handleCreateRoom}
+
+                <Label
+                htmlFor='room'
+                fontS='32px'
                 >
-                    Send name
-                </Button>
+                    Enter room name
+                </Label>
+                <Input
+                placeholder='Room to join or create'
+                onChange={e => handleInput(e)}
+                value={input.room}
+                name='room'
+                />
+
+                <Wrapper
+                margin='25px 0 0'
+                >
+                    <Button
+                    type='button'
+                    onClick={handleCreateRoom}
+                    w='180px'
+                    h='60px'
+                    >
+                        Create room
+                    </Button>
+
+                    <Button
+                    type='button'
+                    onClick={handleJoinRoom}
+                    w='180px'
+                    h='60px'
+                    >
+                        Join room
+                    </Button>
+                </Wrapper>
             </Wrapper>
         </Wrapper>
     )
