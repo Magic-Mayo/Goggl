@@ -15,6 +15,7 @@ module.exports = socket => {
         } else {
             rooms.push(room);
             socket.join(room);
+            join();
         }
     });
 
@@ -23,7 +24,8 @@ module.exports = socket => {
         if(rooms.includes(room)){
             socket.room = room;
             socket.join(room);
-            socket.broadcast.emit()
+            socket.broadcast.emit();
+            create();
         } else {
             // Sends mesage back to user if room doesn't exist.  Will create new room with the name they used if confirmed
             create('Room does not exist.  Would you like to create it?')
