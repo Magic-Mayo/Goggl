@@ -1,11 +1,8 @@
 import React, { useRef, useState } from 'react';
-import {Route} from 'react-router-dom';
-import NavBar from './components/NavBar';
-import Home from './pages/Home';
 import io from 'socket.io-client';
-import ChatBox from './components/ChatBox';
-import Game from './components/Game';
-import { Wrapper } from './components/styledComponents';
+import {Route, Redirect} from 'react-router-dom';
+import Home from './pages/Home';
+import Game from './pages/Game';
 
 const App = () => {
     const {current: socket} = useRef(io(':3001'));
@@ -13,7 +10,6 @@ const App = () => {
 
     return (
         <>
-            <NavBar/>
             <Route exact path='/'>
                 <Home
                 username={username}
@@ -22,17 +18,11 @@ const App = () => {
                 />
             </Route>
             <Route path='/game'>
-                <Wrapper
-                w='95vw'
-                justifyContent='flex-end'
-                margin='80px 0 0 0'
-                >
-                    <Game />
-                    <ChatBox
-                    username={username}
-                    socket={socket}
-                    />
-                </Wrapper>
+                {!username && <Redirect to='/' />}
+                <Game
+                username={username}
+                socket={socket}
+                />
             </Route>
         </>
     );
