@@ -6,5 +6,5 @@ export default styled.label`
     margin: ${({margin}) => margin || '10px'};
     position: ${({position}) => position || ''};
     width: ${({w}) => w || ''};
-    color: ${({fontColor}) => fontColor || ''};
+    color: ${({fontColor}) => fontColor || '#ffdead'};
 `
