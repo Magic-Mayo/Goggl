@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 
 export default styled.button`
-    background-color: ${({bgColor}) => bgColor || '#172a55'};
+    background-color: ${({bgColor}) => bgColor || 'rgba(230,225,33,.9)'};
     width: ${({w}) => w || '125px'};
     height: ${({h}) => h || '125px'};
-    color: ${({fontColor}) => fontColor || '#fff'};
+    color: ${({fontColor}) => fontColor || '#000'};
     border-radius: ${({borderRadius}) => borderRadius || '7px'};
-    box-shadow: ${props => props.boxShadow ? '#444 7px 5px 15px' : ''};
+    box-shadow: ${({boxShadow}) => boxShadow || '#444 7px 5px 15px'};
     border: ${({border}) => border || 'none'};
     font-size: ${({fontS}) => fontS || '30px'};
     font-weight: ${({fontW}) => fontW || ''};
