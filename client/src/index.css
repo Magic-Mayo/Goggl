@@ -5,14 +5,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: url('magazine.png') no-repeat;
-  background-size: cover;
-  background-position: 0;
-}
-
-#root {
-    /* background-color: rgba(241,90,37, .15); */
-
+  background: url('letter-cutouts.jpg') no-repeat;
+  /* background-size: cover; */
+  background-position: 50% 40%;
 }
 
 * {
@@ -27,4 +22,22 @@ code {
 a {
     color: #000000;
     text-decoration: none;
+}
+
+.scroller::-webkit-scrollbar-thumb {
+    width: 10px;
+    background-color: #bbb;
+    border-radius: 5px;
+}
+
+.scroller::-webkit-scrollbar-track {
+    background: none;
+}
+
+.scroller::-webkit-scrollbar {
+    width: 10px;
+}
+
+.scroller:hover {
+    cursor: pointer;
 }
