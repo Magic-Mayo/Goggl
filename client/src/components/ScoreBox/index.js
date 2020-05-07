@@ -1,8 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Wrapper, P } from '../styledComponents';
 
-const ScoreBox = () => {
+const ScoreBox = ({socket}) => {
     const [scores, setScores] = useState([{username: 'dummy', score: 56}, {username: 'dummy', score: 56},{username: 'dummy', score: 56},{username: 'dummy', score: 56}]);
+
+    useEffect(() => {
+        socket.on('game-scores', score => {
+            setScores(score);
+        });
+    }, []);
 
     return (
         <Wrapper
@@ -12,6 +18,8 @@ const ScoreBox = () => {
         border='2px solid #cdcdcd'
         flexDirection='column'
         justifyContent='flex-start'
+        className='scroller no-cursor'
+        overflowY='scroll'
         >
             {scores &&
                 scores.map((score, ind) => (

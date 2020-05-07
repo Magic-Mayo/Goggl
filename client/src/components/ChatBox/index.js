@@ -34,7 +34,8 @@ const ChatBox = ({socket, username}) => {
                 flexDirection='column'
                 justifyContent='flex-start'
                 bgColor='rgba(221,221,238,.9)'
-                overflowY='auto'
+                overflowY='scroll'
+                className='scroller no-cursor'
                 >
                     {chat &&
                         chat.map((chat, ind) => (

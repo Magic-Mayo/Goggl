@@ -31,4 +31,26 @@ export default styled.div`
     z-index: ${({zIndex}) => zIndex || ''};
     overflow-y: ${({overflowY}) => overflowY || ''};
     border-radius: ${({borderRadius}) => borderRadius || ''};
+
+    .scroller::-webkit-scrollbar-thumb {
+        width: 10px;
+        background-color: #bbb;
+        border-radius: 5px;
+    }
+    
+    .scroller::-webkit-scrollbar-track {
+        background: none;
+    }
+    
+    .scroller::-webkit-scrollbar {
+        width: 10px;
+    }
+    
+    .scroller:hover {
+        cursor: pointer;
+    }
+    
+    .no-cursor:hover {
+        cursor: default;
+    }
 `
