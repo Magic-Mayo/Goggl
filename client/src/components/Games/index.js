@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Wrapper, P } from '../styledComponents';
+import { Wrapper, P, Button } from '../styledComponents';
 
 const Games = ({socket, setViewGames, setInput}) => {
     const [games, setGames] = useState([{room: 'asdf', creator: 'me', numPlayers: 4}]);
@@ -9,8 +9,15 @@ const Games = ({socket, setViewGames, setInput}) => {
         setViewGames(false)
     }
 
+    const handleRefresh = () => {
+        socket.emit('refresh-list', () => {
+            console.log('refreshed')
+        })
+    }
+
     useEffect(() => {
-        socket.on('game-list', gameList => {
+        socket.on('games-list', gameList => {
+            console.log(gameList)
             setGames(gameList);
         });
     }, []);
@@ -24,6 +31,9 @@ const Games = ({socket, setViewGames, setInput}) => {
         justifyContent='flex-start'
         padding='0 20px'
         >
+            <Button
+            onClick={handleRefresh}
+            >Refresh</Button>
             <Wrapper
             justifyContent='space-around'
             fontColor='white'
