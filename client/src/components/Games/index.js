@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Wrapper, P } from '../styledComponents';
-import { useHistory } from 'react-router-dom';
 
-const Games = ({socket}) => {
-    const history = useHistory();
-    const [games, setGames] = useState();
+const Games = ({socket, setViewGames, setInput}) => {
+    const [games, setGames] = useState([{room: 'asdf', creator: 'me', numPlayers: 4}]);
 
     const handleJoin = room => {
-        socket.emit('join-room', room, () => {
-            history.push('/game');
-        })
+        setInput(prevInput => ({...prevInput, room: room}));
+        setViewGames(false)
     }
 
     useEffect(() => {
