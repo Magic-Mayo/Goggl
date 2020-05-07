@@ -1,11 +1,17 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import io from 'socket.io-client';
 import {Route, Redirect} from 'react-router-dom';
 import Home from './pages/Home';
 import Game from './pages/Game';
+let socket;
+
+if(process.env.NODE_ENV === 'production'){
+    socket = io();
+} else {
+    socket = io(':3001');
+}
 
 const App = () => {
-    const {current: socket} = useRef(io(':3001'));
     const [username, setUsername] = useState();
 
     return (
@@ -18,7 +24,7 @@ const App = () => {
                 />
             </Route>
             <Route path='/game'>
-                {!username && <Redirect to='/' />}
+                {/* {!username && <Redirect to='/' />} */}
                 <Game
                 username={username}
                 socket={socket}
