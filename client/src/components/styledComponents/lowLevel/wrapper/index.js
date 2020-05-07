@@ -29,6 +29,6 @@ export default styled.div`
     min-width: ${({minWidth}) => minWidth || ''};
     color: ${({fontColor}) => fontColor || ''};
     z-index: ${({zIndex}) => zIndex || ''};
-    overflow-x: ${({overflowX}) => overflowX || ''};
+    overflow-y: ${({overflowY}) => overflowY || ''};
     border-radius: ${({borderRadius}) => borderRadius || ''};
 `

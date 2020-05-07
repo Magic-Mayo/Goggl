@@ -5,5 +5,4 @@ export default styled.form`
     justify-content: center;
     flex-direction: column;
     align-items: ${({alignItems}) => alignItems || 'center'};
-    padding: 10px;
 `
