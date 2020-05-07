@@ -1,11 +1,13 @@
-import React, {useState} from 'react';
-import {Wrapper, Input, Button, P, Label} from '../components/styledComponents';
+import React, {useState, useRef} from 'react';
+import {Wrapper, Button, P,} from '../components/styledComponents';
 import {useHistory} from 'react-router-dom';
 import Modal from '../components/Modal';
 import Games from '../components/Games';
+import Form from '../components/Form';
 
-const Home = ({socket, setUsername}) => {
+const Home = ({socket, username, setUsername}) => {
     const history = useHistory();
+    const ref = useRef(null);
     const [input, setInput] = useState({
         room: '',
         username: ''
@@ -108,42 +110,10 @@ const Home = ({socket, setUsername}) => {
                         </Modal>
                     }
 
-                    <Wrapper
-                    flexDirection='column'
-                    bgColor='rgba(50,50,50,.8)'
-                    w='40vw'
-                    h='50vh'
-                    alignItems='center'
-                    borderRadius='10px'
+                    <Form
+                    input={input}
+                    handleInput={handleInput}
                     >
-                        <Label
-                        htmlFor='username'
-                        fontS='32px'
-                        >
-                            Enter username
-                        </Label>
-                        <Input
-                        placeholder={`If you don't enter one I will`}
-                        onChange={e => handleInput(e)}
-                        value={input.username}
-                        name='username'
-                        />
-
-                        <>
-                            <Label
-                            htmlFor='room'
-                            fontS='32px'
-                            >
-                                Enter room name
-                            </Label>
-                            <Input
-                            placeholder='Room to join or create'
-                            onChange={e => handleInput(e)}
-                            value={input.room}
-                            name='room'
-                            />
-                        </>
-
                         <Wrapper
                         margin='25px 0 0'
                         >
@@ -165,7 +135,7 @@ const Home = ({socket, setUsername}) => {
                                 Join room
                             </Button>
                         </Wrapper>
-                    </Wrapper>
+                    </Form>
                 </Wrapper>
             }
         </>
