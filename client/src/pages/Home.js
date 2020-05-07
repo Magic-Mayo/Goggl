@@ -1,13 +1,12 @@
-import React, {useState, useRef} from 'react';
+import React, {useState} from 'react';
 import {Wrapper, Button, P,} from '../components/styledComponents';
 import {useHistory} from 'react-router-dom';
 import Modal from '../components/Modal';
 import Games from '../components/Games';
 import Form from '../components/Form';
 
-const Home = ({socket, username, setUsername}) => {
+const Home = ({socket, setUsername}) => {
     const history = useHistory();
-    const ref = useRef(null);
     const [input, setInput] = useState({
         room: '',
         username: ''
