@@ -7,6 +7,7 @@ export default styled.input`
     padding: 5px;
     border-radius: 5px;
     font-size: 15px;
+    background-color: ${({bgColor}) => bgColor || ''};
     opacity: ${({opacity}) => opacity || ''};
     position: ${({position}) => position || ''};
 `
