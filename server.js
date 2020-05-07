@@ -11,7 +11,6 @@ app.get('*', (req, res) => res.sendFile(`${__dirname}/client/public/index.html`)
 const server = http.createServer(app);
 const io = socketIo(server);
 
-io.on("connection", events);
-
+events(io);
 
 server.listen(PORT, () => console.log(`Listening on PORT ${PORT}`));
