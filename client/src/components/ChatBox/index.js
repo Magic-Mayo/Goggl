@@ -9,6 +9,7 @@ const ChatBox = ({socket, username}) => {
         e.preventDefault();
         socket.emit('chat', input);
         setChat(prevChat => [...prevChat, {msg: input, username: username}]);
+        setInput('');
     }
     
     useEffect(() => {
@@ -32,7 +33,8 @@ const ChatBox = ({socket, username}) => {
                 margin='20px 0'
                 flexDirection='column'
                 justifyContent='flex-start'
-                bgColor='#dde'
+                bgColor='rgba(221,221,238,.9)'
+                overflowY='auto'
                 >
                     {chat &&
                         chat.map((chat, ind) => (
@@ -67,6 +69,7 @@ const ChatBox = ({socket, username}) => {
                     onChange={e => setInput(e.target.value)}
                     value={input}
                     margin='0'
+                    bgColor='rgba(221,221,238,.9)'
                     />
                 </Form>
             </Wrapper>
