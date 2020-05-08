@@ -43,7 +43,6 @@ module.exports = io => {
             for(let key in io.sockets.adapter.rooms){
                 if(key === room){
                     return join({msg: 'Room already exists.  Would you like to request access?', room: room})
-
                 }
             }
 
@@ -66,10 +65,15 @@ module.exports = io => {
         // join room
         socket.on('join-room', (room, create) => {
             // Sends mesage back to user if room doesn't exist.  Will create new room with the name they used if confirmed
+            let foundRoom;
             for(let key in io.sockets.adapter.rooms){
                 if(key === room){
-                    return create({msg: 'Room does not exist.  Would you like to create it?', room: room})
+                    foundRoom = true;
                 }
+            }
+
+            if(!foundRoom){            
+                return create({msg: 'Room does not exist.  Would you like to create it?', room: room})
             }
 
             // Leave all rooms before joining
