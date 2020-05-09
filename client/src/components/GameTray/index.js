@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Wrapper, Button, Form } from '../styledComponents';
+import { Wrapper, Button } from '../styledComponents';
 
 const Tray = () => {
     const [letterArray, setLetterArray] = useState(['A','F','A','E','T','G','L','O','M','N','A','B','W','I','J','L'])
