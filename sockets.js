@@ -14,7 +14,19 @@ const findRooms = (io, socket) => {
         gameList.push({room: room, creator: firstUser, numPlayers: rooms[room].length})
     }
 
-    socket.emit('games-list', gameList);
+    return socket.emit('games-list', gameList);
+}
+
+const findPlayersInRoom = (io, socket) => {
+    const room = io.sockets.adapter.rooms[socket.room].sockets;
+    const players = [];
+    const user = io.of('/').connected;
+
+    for(let player in room){
+        players.push(user[player].username);
+    }
+
+    return players;
 }
 
 module.exports = io => {
@@ -33,9 +45,9 @@ module.exports = io => {
             findRooms(io, socket);
         }, 60000);
 
-        socket.on('refresh-list', refresh => {
+        socket.on('refresh-list', () => {
             findRooms(io, socket);
-        })
+        });
         
         // create room
         socket.on('create-room', (room, join) => {
@@ -58,7 +70,7 @@ module.exports = io => {
             socket.join(room, () => {
                 clearInterval(emitGames);
                 socket.room = room;
-                join();
+                join({username: socket.username});
             });
         });
         
@@ -89,9 +101,13 @@ module.exports = io => {
             socket.join(room, () => {
                 clearInterval(emitGames);
                 socket.room = room;
-                socket.to(room).emit('join', `${socket.username} has entered the room!`);
-                create();
+                socket.to(room).emit('chat', {msg: `${socket.username} has entered the room!`, username: 'SERVER UNDERLORDS'});
+                create({username: socket.username});
             });
+        });
+
+        socket.on('players-in-room', joined => {
+            socket.to(socket.room).emit('join', findPlayersInRoom(io, socket))
         });
 
         // Leave room
