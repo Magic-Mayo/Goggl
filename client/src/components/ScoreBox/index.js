@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import { Wrapper, P } from '../styledComponents';
+import { SocketContext } from '../../utils/Context';
 
 const ScoreBox = () => {
-    const [scores, setScores] = useState([{username: 'dummy', score: 56}, {username: 'dummy', score: 56},{username: 'dummy', score: 56},{username: 'dummy', score: 56}]);
+    const {scores, players} = useContext(SocketContext);
 
     return (
         <Wrapper
@@ -24,6 +25,22 @@ const ScoreBox = () => {
                     >
                         <P>
                             {score.username}: {score.score}
+                        </P>
+                    </Wrapper>
+                ))
+            }
+
+            {!scores && players &&
+                players.map((player, ind) => (
+                    <Wrapper
+                    key={ind}
+                    h='50px'
+                    w='100%'
+                    bgColor={ind % 2 === 0 ? 'rgba(85,85,85,.5)' : ''}
+                    borderBottom='2px solid #ccc'
+                    >
+                        <P>
+                            {player}
                         </P>
                     </Wrapper>
                 ))

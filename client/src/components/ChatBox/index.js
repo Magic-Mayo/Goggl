@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {Wrapper, Form, Input, P} from '../styledComponents';
+import { SocketContext } from '../../utils/Context';
 
 const ChatBox = ({socket, username}) => {
-    const [chat, setChat] = useState([]);
     const [input, setInput] = useState('');
+    const {chat, setChat} = useContext(SocketContext);
     
     const handleChat = e => {
         e.preventDefault();
@@ -11,12 +12,6 @@ const ChatBox = ({socket, username}) => {
         setChat(prevChat => [...prevChat, {msg: input, username: username}]);
         setInput('');
     }
-    
-    useEffect(() => {
-        socket.on('chat', chat =>{
-            setChat(prevChat => [...prevChat, {msg: chat.msg, username: chat.username}]);
-        });
-    }, [])
 
     return (
         <>
