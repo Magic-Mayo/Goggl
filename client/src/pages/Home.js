@@ -64,6 +64,7 @@ const Home = ({socket, setUsername}) => {
             onClick={() => {
                 setViewGames(!viewGames);
                 setInput({username: '', room: ''})
+                setModal();
             }}
             w='300px'
             h='100px'
