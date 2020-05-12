@@ -31,7 +31,9 @@ const Game = ({socket, username}) => {
             <Wrapper
             w='100vw'
             h='100vh'
-            justifyContent='space-evenly'
+            justifyContent='space-between'
+            alignItems='flex-end'
+            padding='0 20px 30px'
             >
 
                 <ScoreBox
