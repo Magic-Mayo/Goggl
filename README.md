@@ -26,3 +26,4 @@ name={name}
 
 <Link to='/game'>
 ```
+* with only one parameter on functions don't use parentheses
