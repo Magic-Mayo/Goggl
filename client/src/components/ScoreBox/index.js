@@ -13,7 +13,7 @@ const ScoreBox = ({socket}) => {
     return (
         <Wrapper
         w='400px'
-        h='700px'
+        h='80vh'
         bgColor='rgba(221,221,238,.9)'
         border='2px solid #cdcdcd'
         flexDirection='column'
