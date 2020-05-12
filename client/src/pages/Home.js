@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
-import {Wrapper, Input, Button, P, Label} from '../components/styledComponents';
+import {Wrapper, Button, P,} from '../components/styledComponents';
 import {useHistory} from 'react-router-dom';
 import Modal from '../components/Modal';
 import Games from '../components/Games';
+import Form from '../components/Form';
 
 const Home = ({socket, setUsername}) => {
     const history = useHistory();
@@ -63,6 +64,7 @@ const Home = ({socket, setUsername}) => {
             onClick={() => {
                 setViewGames(!viewGames);
                 setInput({username: '', room: ''})
+                setModal();
             }}
             w='300px'
             h='100px'
@@ -70,6 +72,7 @@ const Home = ({socket, setUsername}) => {
             top='0'
             left='50%'
             trans='translateX(-50%)'
+            margin='10px 0 0'
             >
                 {viewGames ? 'Join/Create Private Room' : 'See all games'}
             </Button>
@@ -78,6 +81,7 @@ const Home = ({socket, setUsername}) => {
                 <Wrapper
                 w='100vw'
                 h='100vh'
+                padding='100px 0 0'
                 >
                     <Games
                     socket={socket}
@@ -89,6 +93,7 @@ const Home = ({socket, setUsername}) => {
                 <Wrapper
                 h='100vh'
                 alignItems='center'
+                justifyContent='flex-end'
                 >
                     {modal && 
                         <Modal>
@@ -108,42 +113,10 @@ const Home = ({socket, setUsername}) => {
                         </Modal>
                     }
 
-                    <Wrapper
-                    flexDirection='column'
-                    bgColor='rgba(50,50,50,.8)'
-                    w='40vw'
-                    h='50vh'
-                    alignItems='center'
-                    borderRadius='10px'
+                    <Form
+                    input={input}
+                    handleInput={handleInput}
                     >
-                        <Label
-                        htmlFor='username'
-                        fontS='32px'
-                        >
-                            Enter username
-                        </Label>
-                        <Input
-                        placeholder={`If you don't enter one I will`}
-                        onChange={e => handleInput(e)}
-                        value={input.username}
-                        name='username'
-                        />
-
-                        <>
-                            <Label
-                            htmlFor='room'
-                            fontS='32px'
-                            >
-                                Enter room name
-                            </Label>
-                            <Input
-                            placeholder='Room to join or create'
-                            onChange={e => handleInput(e)}
-                            value={input.room}
-                            name='room'
-                            />
-                        </>
-
                         <Wrapper
                         margin='25px 0 0'
                         >
@@ -165,7 +138,7 @@ const Home = ({socket, setUsername}) => {
                                 Join room
                             </Button>
                         </Wrapper>
-                    </Wrapper>
+                    </Form>
                 </Wrapper>
             }
         </>

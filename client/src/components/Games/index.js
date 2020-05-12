@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Wrapper, P, Button } from '../styledComponents';
 
 const Games = ({socket, setViewGames, setInput}) => {
-    const [games, setGames] = useState([{room: 'asdf', creator: 'me', numPlayers: 4}]);
+    const [games, setGames] = useState();
 
     const handleJoin = room => {
         setInput(prevInput => ({...prevInput, room: room}));
@@ -17,7 +17,6 @@ const Games = ({socket, setViewGames, setInput}) => {
 
     useEffect(() => {
         socket.on('games-list', gameList => {
-            console.log(gameList)
             setGames(gameList);
         });
     }, []);
@@ -25,18 +24,29 @@ const Games = ({socket, setViewGames, setInput}) => {
     return (
         <Wrapper
         w='700px'
-        h='70vh'
+        h='80vh'
         bgColor='rgba(50,50,50,.8)'
         flexDirection='column'
         justifyContent='flex-start'
         padding='0 20px'
+        margin='0 0 30px 20px'
         >
             <Button
             onClick={handleRefresh}
-            >Refresh</Button>
+            w='50px'
+            h='50px'
+            borderRadius='50%'
+            bgColor='transparent'
+            boxShadow='none'
+            fontS='16px'
+            fontColor='white'
+            >
+                Refresh
+            </Button>
             <Wrapper
             justifyContent='space-around'
             fontColor='white'
+            h='100%'
             >
                 <P
                 fontS='24px'

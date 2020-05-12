@@ -5,4 +5,5 @@ export default styled.form`
     justify-content: center;
     flex-direction: column;
     align-items: ${({alignItems}) => alignItems || 'center'};
+    width: 100%;
 `
