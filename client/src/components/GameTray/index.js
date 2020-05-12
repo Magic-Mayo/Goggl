@@ -47,6 +47,15 @@ const Tray = () => {
         alignItems='center'
         justifyContent='space-evenly'
         >
+
+            <Button
+            w='275px'
+            h='75px'
+            onClick={handleWordSubmit}
+            >
+                Submit Word!
+            </Button>
+
             <Wrapper
             display='grid'
             bgColor='#d96a45'
@@ -65,15 +74,7 @@ const Tray = () => {
                         {`${letter} ${firstLetter === ind ? 'asdf' : ''}`}
                     </Button>
                 ))}
-            </Wrapper>
-            
-            <Button
-            w='275px'
-            h='75px'
-            onClick={handleWordSubmit}
-            >
-                Submit Word!
-            </Button>
+            </Wrapper>            
         </Wrapper>
     )
 }

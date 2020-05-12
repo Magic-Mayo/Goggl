@@ -18,18 +18,20 @@ const ChatBox = ({socket, username}) => {
             <Wrapper
             flexDirection='column'
             alignItems='flex-end'
+            justifyContent='space-between'
             w='350px'
+            h='80vh'
             >
 
                 <Wrapper
-                w='400px'
-                h='700px'
+                w='100%'
+                h='90%'
                 border=' 2px solid #ccc'
-                margin='20px 0'
                 flexDirection='column'
                 justifyContent='flex-start'
                 bgColor='rgba(221,221,238,.9)'
-                overflowY='auto'
+                overflowY='scroll'
+                className='scroller no-cursor'
                 >
                     {chat &&
                         chat.map((chat, ind) => (
@@ -58,6 +60,7 @@ const ChatBox = ({socket, username}) => {
                 <Form
                 onSubmit={e => handleChat(e)}
                 alignItems='flex-end'
+                w='100%'
                 >
                     <Input
                     placeholder='Enter chat'
@@ -65,6 +68,7 @@ const ChatBox = ({socket, username}) => {
                     value={input}
                     margin='0'
                     bgColor='rgba(221,221,238,.9)'
+                    w='100%'
                     />
                 </Form>
             </Wrapper>

@@ -26,11 +26,7 @@ const Game = () => {
     }, [])
 
     return (
-        <Wrapper
-        w='100vw'
-        h='100vh'
-        justifyContent='space-evenly'
-        >
+        <>
             <Button
             w='200px'
             h='50px'
@@ -42,18 +38,27 @@ const Game = () => {
             >
                 Leave Room
             </Button>
+            
+            <Wrapper
+            w='100vw'
+            h='100vh'
+            justifyContent='space-between'
+            alignItems='flex-end'
+            padding='0 20px 30px'
+            >
 
-            <ScoreBox
-            socket={socket}
-            />
+                <ScoreBox
+                socket={socket}
+                />
 
-            <GameTray />
+                <GameTray />
 
-            <ChatBox
-            username={username}
-            socket={socket}
-            />
-        </Wrapper>
+                <ChatBox
+                username={username}
+                socket={socket}
+                />
+            </Wrapper>
+        </>
     )
 }
 

@@ -8,11 +8,13 @@ const ScoreBox = () => {
     return (
         <Wrapper
         w='400px'
-        h='700px'
+        h='80vh'
         bgColor='rgba(221,221,238,.9)'
         border='2px solid #cdcdcd'
         flexDirection='column'
         justifyContent='flex-start'
+        className='scroller no-cursor'
+        overflowY='scroll'
         >
             {scores &&
                 scores.map((score, ind) => (
