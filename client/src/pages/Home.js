@@ -72,6 +72,7 @@ const Home = ({socket, setUsername}) => {
             top='0'
             left='50%'
             trans='translateX(-50%)'
+            margin='10px 0 0'
             >
                 {viewGames ? 'Join/Create Private Room' : 'See all games'}
             </Button>
@@ -80,6 +81,7 @@ const Home = ({socket, setUsername}) => {
                 <Wrapper
                 w='100vw'
                 h='100vh'
+                padding='100px 0 0'
                 >
                     <Games
                     socket={socket}
@@ -91,6 +93,7 @@ const Home = ({socket, setUsername}) => {
                 <Wrapper
                 h='100vh'
                 alignItems='center'
+                justifyContent='flex-end'
                 >
                     {modal && 
                         <Modal>
