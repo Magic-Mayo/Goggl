@@ -24,11 +24,12 @@ const Games = ({socket, setViewGames, setInput}) => {
     return (
         <Wrapper
         w='700px'
-        h='70vh'
+        h='80vh'
         bgColor='rgba(50,50,50,.8)'
         flexDirection='column'
         justifyContent='flex-start'
         padding='0 20px'
+        margin='0 0 30px 20px'
         >
             <Button
             onClick={handleRefresh}
@@ -45,6 +46,7 @@ const Games = ({socket, setViewGames, setInput}) => {
             <Wrapper
             justifyContent='space-around'
             fontColor='white'
+            h='100%'
             >
                 <P
                 fontS='24px'
