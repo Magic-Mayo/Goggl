@@ -45,6 +45,7 @@ const Games = ({socket, setViewGames, setInput}) => {
             </Button>
             <Wrapper
             justifyContent='space-around'
+            alignItems='flex-start'
             fontColor='white'
             h='100%'
             >
