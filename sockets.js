@@ -19,6 +19,7 @@ const findRooms = (io, socket) => {
     socket.emit('games-list', gameList);
 }
 
+
 const binarySearch = word => {
     let currentElement;
     let currentIndex;
@@ -42,10 +43,35 @@ const binarySearch = word => {
 }
 
 const verifyWords = submittedWords => {
-    const newList = [];
+    const newList = {words: [], score: 0};
     for(let i in submittedWords){
         if(binarySearch(submittedWords[i])){
-            newList.push(submittedWords[i])
+            switch(submittedWords[i].length){
+                case 3: newList.words.push(submittedWords[i]);
+                newList.score += 1;
+                break;
+                case 4: newList.words.push(submittedWords[i]);
+                newList.score += 2;
+                break;
+                case 5: newList.words.push(submittedWords[i]);
+                newList.score += 3;
+                break;
+                case 6: newList.words.push(submittedWords[i]);
+                newList.score += 4;
+                break;
+                case 7: newList.words.push(submittedWords[i]);
+                newList.score += 5;
+                break;
+                case 8: newList.words.push(submittedWords[i]);
+                newList.score += 7;
+                break;
+                case 9: newList.words.push(submittedWords[i]);
+                newList.score += 8;
+                break;
+                default: newList.words.push(submittedWords[i]);
+                newList.score += 10;
+                break;
+            }
         }
     }
 
@@ -131,7 +157,8 @@ module.exports = io => {
 
         // Verify words and set score
         socket.on('send-words', score => {
-            
+            const checkWords = verifyWords(score);
+            socket.to(socket.room).emit('scores', checkWords.score);
         })
 
         // Leave room
