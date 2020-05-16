@@ -1,3 +1,5 @@
+const wordList = require('./wordlist.json');
+
 const findRooms = (io, socket) => {
     const rooms = io.sockets.adapter.rooms;
 
@@ -17,6 +19,39 @@ const findRooms = (io, socket) => {
     socket.emit('games-list', gameList);
 }
 
+const binarySearch = word => {
+    let currentElement;
+    let currentIndex;
+    let maxIndex = wordList.length - 1;
+    let minIndex = 0;
+  
+    while (minIndex <= maxIndex) {
+        currentIndex = Math.floor((minIndex + maxIndex) / 2);
+        currentElement = wordList[currentIndex];
+  
+        if (currentElement.localeCompare(word) === -1) {
+            minIndex = currentIndex + 1;  
+        } else if (currentElement.localeCompare(word) === 1) {
+            maxIndex = currentIndex - 1;
+        } else {
+            return true;
+        }
+    }
+  
+    return false;
+}
+
+const verifyWords = submittedWords => {
+    const newList = [];
+    for(let i in submittedWords){
+        if(binarySearch(submittedWords[i])){
+            newList.push(submittedWords[i])
+        }
+    }
+
+    return newList;
+}
+
 module.exports = io => {
 
     io.on('connection', socket =>{
@@ -29,6 +64,7 @@ module.exports = io => {
             confirm(socket.username)
         });
         
+        // send refreshed room list every minute
         const emitGames = setInterval(() => {
             findRooms(io, socket);
         }, 60000);
@@ -87,12 +123,16 @@ module.exports = io => {
             }
 
             socket.join(room, () => {
-                clearInterval(emitGames);
                 socket.room = room;
                 socket.to(room).emit('join', `${socket.username} has entered the room!`);
                 create();
             });
         });
+
+        // Verify words and set score
+        socket.on('send-words', score => {
+            
+        })
 
         // Leave room
         socket.on('leave-room', confirmLeave => {
