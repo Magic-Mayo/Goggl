@@ -16,7 +16,19 @@ const findRooms = (io, socket) => {
         gameList.push({room: room, creator: firstUser, numPlayers: rooms[room].length})
     }
 
-    socket.emit('games-list', gameList);
+    return socket.emit('games-list', gameList);
+}
+
+const findPlayersInRoom = (io, socket) => {
+    const room = io.sockets.adapter.rooms[socket.room].sockets;
+    const players = [];
+    const user = io.of('/').connected;
+
+    for(let player in room){
+        players.push(user[player].username);
+    }
+
+    return players;
 }
 
 
@@ -42,33 +54,33 @@ const binarySearch = word => {
     return false;
 }
 
-const verifyWords = submittedWords => {
+const verifyWords = wordsArr => {
     const newList = {words: [], score: 0};
-    for(let i in submittedWords){
-        if(binarySearch(submittedWords[i])){
-            switch(submittedWords[i].length){
-                case 3: newList.words.push(submittedWords[i]);
+    for(let i in wordsArr){
+        if(binarySearch(wordsArr[i])){
+            switch(wordsArr[i].length){
+                case 3: newList.words.push(wordsArr[i]);
                 newList.score += 1;
                 break;
-                case 4: newList.words.push(submittedWords[i]);
+                case 4: newList.words.push(wordsArr[i]);
                 newList.score += 2;
                 break;
-                case 5: newList.words.push(submittedWords[i]);
+                case 5: newList.words.push(wordsArr[i]);
                 newList.score += 3;
                 break;
-                case 6: newList.words.push(submittedWords[i]);
+                case 6: newList.words.push(wordsArr[i]);
                 newList.score += 4;
                 break;
-                case 7: newList.words.push(submittedWords[i]);
+                case 7: newList.words.push(wordsArr[i]);
                 newList.score += 5;
                 break;
-                case 8: newList.words.push(submittedWords[i]);
+                case 8: newList.words.push(wordsArr[i]);
                 newList.score += 7;
                 break;
-                case 9: newList.words.push(submittedWords[i]);
+                case 9: newList.words.push(wordsArr[i]);
                 newList.score += 8;
                 break;
-                default: newList.words.push(submittedWords[i]);
+                default: newList.words.push(wordsArr[i]);
                 newList.score += 10;
                 break;
             }
@@ -95,9 +107,9 @@ module.exports = io => {
             findRooms(io, socket);
         }, 60000);
 
-        socket.on('refresh-list', refresh => {
+        socket.on('refresh-list', () => {
             findRooms(io, socket);
-        })
+        });
         
         // create room
         socket.on('create-room', (room, join) => {
@@ -120,7 +132,7 @@ module.exports = io => {
             socket.join(room, () => {
                 clearInterval(emitGames);
                 socket.room = room;
-                join();
+                join({username: socket.username});
             });
         });
         
@@ -151,14 +163,18 @@ module.exports = io => {
 
             socket.join(room, () => {
                 socket.room = room;
-                socket.to(room).emit('join', `${socket.username} has entered the room!`);
-                create();
+                socket.to(room).emit('chat', {msg: `${socket.username} has entered the room!`, username: 'SERVER UNDERLORDS'});
+                create({username: socket.username});
             });
         });
 
         // Verify words and set score
         socket.on('send-words', score => {
             socket.to(socket.room).emit('scores', verifyWords(score));
+        });
+
+        socket.on('players-in-room', joined => {
+            socket.to(socket.room).emit('join', findPlayersInRoom(io, socket))
         });
 
         // Leave room

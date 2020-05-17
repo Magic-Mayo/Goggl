@@ -1,18 +1,29 @@
-import React from 'react';
+import React, {useContext, useEffect} from 'react';
 import {useHistory} from 'react-router-dom';
 import { Wrapper, Button } from '../components/styledComponents';
 import GameTray from '../components/GameTray';
 import ScoreBox from '../components/ScoreBox';
 import ChatBox from '../components/ChatBox';
+import { SocketContext } from '../utils/Context';
 
-const Game = ({socket, username}) => {
+const Game = () => {
     const history = useHistory();
+    const {socket, username, setPlayers} = useContext(SocketContext);
 
     const handleLeaveRoom = () => {
         socket.emit('leave-room', () => {
-            history.push('/')        ;
-        })
+            history.push('/');
+        });
+
     }
+    
+    useEffect(() => {
+        socket.emit('players-in-room', getPlayers => {
+            setPlayers(getPlayers);
+        });
+        
+        return () => socket.emit('refresh-list', () => null)
+    }, [])
 
     return (
         <>

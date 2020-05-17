@@ -1,11 +1,12 @@
-import React, {useState} from 'react';
-import {Wrapper, Button, P,} from '../components/styledComponents';
+import React, {useState, useContext} from 'react';
+import {Wrapper, Input, Button, P, Label} from '../components/styledComponents';
 import {useHistory} from 'react-router-dom';
 import Modal from '../components/Modal';
 import Games from '../components/Games';
-import Form from '../components/Form';
+import { SocketContext } from '../utils/Context';
 
-const Home = ({socket, setUsername}) => {
+const Home = () => {
+    const {socket, setPlayers, setUsername} = useContext(SocketContext);
     const history = useHistory();
     const [input, setInput] = useState({
         room: '',
@@ -24,11 +25,12 @@ const Home = ({socket, setUsername}) => {
         socket.emit('set-username', input.username, username => {
             setUsername(username);
             socket.emit('join-room', input.room, create => {
-                if(create){
+                if(create.msg){
                     setInput(prevInput => ({...prevInput, room: create.room}))
                     return setModal(create.msg);
                 }
                 
+                setPlayers(create.username);
                 history.push('/game');
             })
         });
@@ -43,11 +45,12 @@ const Home = ({socket, setUsername}) => {
         socket.emit('set-username', input.username, username => {
             setUsername(username);
             socket.emit('create-room', input.room, join => {
-                if(join){
+                if(join.msg){
                     setInput(prevInput => ({...prevInput, room: join.room}))
                     return setModal(join.msg);
                 }
 
+                setPlayers(join.user)
                 history.push('/game');
             })
         })

@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Wrapper, P, Button } from '../styledComponents';
+import { SocketContext } from '../../utils/Context';
 
 const Games = ({socket, setViewGames, setInput}) => {
-    const [games, setGames] = useState();
+    const {games} = useContext(SocketContext);
 
     const handleJoin = room => {
         setInput(prevInput => ({...prevInput, room: room}));
@@ -11,15 +12,9 @@ const Games = ({socket, setViewGames, setInput}) => {
 
     const handleRefresh = () => {
         socket.emit('refresh-list', () => {
-            console.log('refreshed')
+            return;
         })
     }
-
-    useEffect(() => {
-        socket.on('games-list', gameList => {
-            setGames(gameList);
-        });
-    }, []);
 
     return (
         <Wrapper
@@ -45,6 +40,7 @@ const Games = ({socket, setViewGames, setInput}) => {
             </Button>
             <Wrapper
             justifyContent='space-around'
+            alignItems='flex-start'
             fontColor='white'
             h='100%'
             >
