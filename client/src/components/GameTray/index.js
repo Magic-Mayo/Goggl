@@ -3,7 +3,7 @@ import { Wrapper, Button } from '../styledComponents';
 import Context from '../../utils/Context';
 
 const Tray = () => {
-    const {socket, players, scores, updatedScores, setUpdatedScores, setScores} = useContext(Context);
+    const {socket, players, scores: prevScores, updatedScores, setUpdatedScores, setScores} = useContext(Context);
     const [letterArray, setLetterArray] = useState(['A','F','A','E','T','G','L','O','M','N','A','B','W','I','J','L'])
     const [chosenLetters, setChosenLetters] = useState([]);
     const [wordList, setWordList] = useState([]);
@@ -49,19 +49,15 @@ const Tray = () => {
 
     useEffect(() => {
         if(updatedScores.length >= players.length){
-            const newScores = [];
-            updatedScores.forEach(score => {
-                const newScoreObj = {}
-                newScoreObj.username = score.username;
-
-                if(socket.username === score.username){
-                    
-                }
-
-                if(socket.username !== updatedScores.username) return;
-
-                score.score
-            })
+            setScores(prevScores => {
+                return updatedScores.map(score => {
+                    for(let i in prevScores){
+                        if(prevScores[i].username === score.username){
+                            prevScores[i].score += score.score;
+                        }
+                    }
+                });
+            });
         }
     }, [updatedScores])
 
