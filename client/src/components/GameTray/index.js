@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Wrapper, Button } from '../styledComponents';
+import Context from '../../utils/Context';
 
 const Tray = () => {
+    const {socket, players, scores, updatedScores, setUpdatedScores, setScores} = useContext(Context);
     const [letterArray, setLetterArray] = useState(['A','F','A','E','T','G','L','O','M','N','A','B','W','I','J','L'])
     const [chosenLetters, setChosenLetters] = useState([]);
     const [wordList, setWordList] = useState([]);
-    const [firstLetter, setFirstLetter] = useState()
+    const [firstLetter, setFirstLetter] = useState();
 
     const handleClick = ind => {
         setChosenLetters(prevLetters => {
@@ -40,6 +42,28 @@ const Tray = () => {
         })
         setChosenLetters([]);
     }
+
+    const sendWordList = () => {
+        socket.emit('word-list', wordList);
+    }
+
+    useEffect(() => {
+        if(updatedScores.length >= players.length){
+            const newScores = [];
+            updatedScores.forEach(score => {
+                const newScoreObj = {}
+                newScoreObj.username = score.username;
+
+                if(socket.username === score.username){
+                    
+                }
+
+                if(socket.username !== updatedScores.username) return;
+
+                score.score
+            })
+        }
+    }, [updatedScores])
 
     return (
         <Wrapper
