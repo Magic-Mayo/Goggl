@@ -54,8 +54,8 @@ const binarySearch = word => {
     return false;
 }
 
-const verifyWords = wordsArr => {
-    const newList = {words: [], score: 0};
+const verifyWords = (socket, wordsArr) => {
+    const newList = {words: [], score: 0, username: socket.username};
     for(let i in wordsArr){
         if(binarySearch(wordsArr[i])){
             switch(wordsArr[i].length){
@@ -170,7 +170,7 @@ module.exports = io => {
 
         // Verify words and set score
         socket.on('send-words', score => {
-            socket.to(socket.room).emit('scores', verifyWords(score));
+            socket.to(socket.room).emit('scores', verifyWords(socket, score));
         });
 
         socket.on('players-in-room', joined => {
