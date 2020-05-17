@@ -131,6 +131,7 @@ module.exports = io => {
             for(let key in io.sockets.adapter.rooms){
                 if(key === room){
                     foundRoom = true;
+                    break;
                 }
             }
 
@@ -157,16 +158,15 @@ module.exports = io => {
 
         // Verify words and set score
         socket.on('send-words', score => {
-            const checkWords = verifyWords(score);
-            socket.to(socket.room).emit('scores', checkWords.score);
-        })
+            socket.to(socket.room).emit('scores', verifyWords(score));
+        });
 
         // Leave room
         socket.on('leave-room', confirmLeave => {
             socket.leave(socket.room, () => {
                 confirmLeave(socket.room);
             });
-        })
+        });
 
         // send messages
         socket.on('chat', msg => {
