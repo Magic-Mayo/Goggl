@@ -42,7 +42,7 @@ const ScoreBox = () => {
                     borderBottom='2px solid #ccc'
                     >
                         <P>
-                            {player}
+                            {player}: 0
                         </P>
                     </Wrapper>
                 ))
