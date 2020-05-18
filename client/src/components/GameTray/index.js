@@ -1,9 +1,10 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Wrapper, Button } from '../styledComponents';
-import Context from '../../utils/Context';
+import {SocketContext} from '../../utils/Context';
+import Loading from '../Loading';
 
 const Tray = () => {
-    const {socket, players, scores: prevScores, updatedScores, setUpdatedScores, setScores} = useContext(Context);
+    const {socket, loading, players, scores, updatedScores, setUpdatedScores, setScores} = useContext(SocketContext);
     const [letterArray, setLetterArray] = useState(['A','F','A','E','T','G','L','O','M','N','A','B','W','I','J','L'])
     const [chosenLetters, setChosenLetters] = useState([]);
     const [wordList, setWordList] = useState([]);
@@ -48,7 +49,7 @@ const Tray = () => {
     }
 
     useEffect(() => {
-        if(updatedScores.length >= players.length){
+        if(updatedScores && players && updatedScores.length >= players.length){
             setScores(prevScores => {
                 return updatedScores.map(score => {
                     for(let i in prevScores){
@@ -65,36 +66,43 @@ const Tray = () => {
         <Wrapper
         flexDirection='column'
         alignItems='center'
-        justifyContent='space-evenly'
+        justifyContent={loading ? 'center' : 'space-evenly'}
+        h='80vh'
         >
 
-            <Button
-            w='275px'
-            h='75px'
-            onClick={handleWordSubmit}
-            >
-                Submit Word!
-            </Button>
-
-            <Wrapper
-            display='grid'
-            bgColor='#d96a45'
-            borderRadius='20px'
-            >
-                {letterArray.map((letter, ind) => (
+            {loading ?
+                <Loading />
+            :
+                <>
                     <Button
-                    key={ind}
-                    onClick={() => handleClick(ind)}
-                    border='1px solid #fff'
-                    bgColor={chosenLetters.includes(ind) ? '#00509c' : '#fcfcfa'}
-                    fontColor={chosenLetters.includes(ind) ? '#fcfcfa' : '#00509c'}
-                    fontS='50px'
-                    fontW='bold'
+                    w='275px'
+                    h='75px'
+                    onClick={handleWordSubmit}
                     >
-                        {`${letter} ${firstLetter === ind ? 'asdf' : ''}`}
+                        Submit Word!
                     </Button>
-                ))}
-            </Wrapper>            
+
+                    <Wrapper
+                    display='grid'
+                    bgColor='#d96a45'
+                    borderRadius='20px'
+                    >
+                        {letterArray.map((letter, ind) => (
+                            <Button
+                            key={ind}
+                            onClick={() => handleClick(ind)}
+                            border='1px solid #fff'
+                            bgColor={chosenLetters.includes(ind) ? '#00509c' : '#fcfcfa'}
+                            fontColor={chosenLetters.includes(ind) ? '#fcfcfa' : '#00509c'}
+                            fontS='50px'
+                            fontW='bold'
+                            >
+                                {`${letter} ${firstLetter === ind ? 'asdf' : ''}`}
+                            </Button>
+                        ))}
+                    </Wrapper>
+                </>
+            }
         </Wrapper>
     )
 }
