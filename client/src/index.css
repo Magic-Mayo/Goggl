@@ -23,3 +23,23 @@ a {
     color: #000000;
     text-decoration: none;
 }
+
+@keyframes spinning {
+    from {
+        transform: rotateZ(0deg);
+    }
+
+    to {
+        transform: rotateZ(360deg);
+    }
+}
+
+.loading {
+    border: #000 3px solid;
+    border-top: none;
+    border-left: none;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    animation: spinning .7s linear infinite;
+}
