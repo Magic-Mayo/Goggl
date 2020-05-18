@@ -17,7 +17,8 @@ export default ({children}) => {
     const [username, setUsername] = useState('');
     const [games, setGames] = useState([]);
     const [chat, setChat] = useState([]);
-    const [updatedScores, setUpdateScores] = useState([]);
+    const [updatedScores, setUpdatedScores] = useState([]);
+    const [loading, setLoading] = useState(true);
     
     useEffect(() => {
         socket.on('game-scores', score => {
@@ -37,7 +38,7 @@ export default ({children}) => {
         });
 
         socket.on('scores', playerScores => {
-            setUpdateScores(prevUpdatedScores => [...prevUpdatedScores, playerScores]);
+            setUpdatedScores(prevUpdatedScores => [...prevUpdatedScores, playerScores]);
         })
 
         return () => {
@@ -51,6 +52,7 @@ export default ({children}) => {
     return (
         <SocketContext.Provider
         value={{
+            loading,
             socket,
             scores,
             updatedScores,
@@ -58,8 +60,9 @@ export default ({children}) => {
             username,
             games,
             chat,
+            setLoading,
             setScores,
-            setUpdateScores,
+            setUpdateScores: setUpdatedScores,
             setPlayers,
             setUsername,
             setGames,
