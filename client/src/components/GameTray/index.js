@@ -86,19 +86,38 @@ const Tray = () => {
                     display='grid'
                     bgColor='#d96a45'
                     borderRadius='20px'
+                    margin='0 25px'
                     >
                         {letterArray.map((letter, ind) => (
-                            <Button
-                            key={ind}
-                            onClick={() => handleClick(ind)}
-                            border='1px solid #fff'
-                            bgColor={chosenLetters.includes(ind) ? '#00509c' : '#fcfcfa'}
-                            fontColor={chosenLetters.includes(ind) ? '#fcfcfa' : '#00509c'}
-                            fontS='50px'
-                            fontW='bold'
-                            >
-                                {`${letter} ${firstLetter === ind ? 'asdf' : ''}`}
-                            </Button>
+                            <>
+                                <Button
+                                w='275px'
+                                h='75px'
+                                onClick={handleWordSubmit}
+                                >
+                                    Submit Word!
+                                </Button>
+
+                                <Wrapper
+                                display='grid'
+                                bgColor='#d96a45'
+                                borderRadius='20px'
+                                >
+                                    {letterArray.map((letter, ind) => (
+                                        <Button
+                                        key={ind}
+                                        onClick={() => handleClick(ind)}
+                                        border='1px solid #fff'
+                                        bgColor={chosenLetters.includes(ind) ? '#00509c' : '#fcfcfa'}
+                                        fontColor={chosenLetters.includes(ind) ? '#fcfcfa' : '#00509c'}
+                                        fontS='50px'
+                                        fontW='bold'
+                                        >
+                                            {`${letter} ${firstLetter === ind ? 'asdf' : ''}`}
+                                        </Button>
+                                    ))}
+                                </Wrapper>
+                            </>
                         ))}
                     </Wrapper>
                 </>
