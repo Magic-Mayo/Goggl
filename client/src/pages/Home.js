@@ -1,6 +1,7 @@
 import React, {useState, useContext} from 'react';
 import {Wrapper, Input, Button, P, Label} from '../components/styledComponents';
 import {useHistory} from 'react-router-dom';
+import Form from '../components/Form';
 import Modal from '../components/Modal';
 import Games from '../components/Games';
 import { SocketContext } from '../utils/Context';
