@@ -93,7 +93,7 @@ const Home = ({socket, setUsername}) => {
                 <Wrapper
                 h='100vh'
                 alignItems='center'
-                justifyContent='flex-end'
+                justifyContent='center'
                 >
                     {modal && 
                         <Modal>
