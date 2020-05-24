@@ -60,6 +60,7 @@ const Tray = () => {
             display='grid'
             bgColor='#d96a45'
             borderRadius='20px'
+            margin='0 25px'
             >
                 {letterArray.map((letter, ind) => (
                     <Button
