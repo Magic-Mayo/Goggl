@@ -1,5 +1,6 @@
 import React, {useState, useContext} from 'react';
 import {Wrapper, Input, Button, P, Label} from '../components/styledComponents';
+import Form from '../components/Form';
 import {useHistory} from 'react-router-dom';
 import Modal from '../components/Modal';
 import Games from '../components/Games';
@@ -96,7 +97,7 @@ const Home = () => {
                 <Wrapper
                 h='100vh'
                 alignItems='center'
-                justifyContent='flex-end'
+                justifyContent='center'
                 >
                     {modal && 
                         <Modal>
