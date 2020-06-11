@@ -1,5 +1,5 @@
 {
-  "name": "goggle",
+  "name": "goggl",
   "version": "0.0.1",
   "description": "Word finding game",
   "main": "server.js",
