@@ -44,7 +44,7 @@ const Game = () => {
             h='100vh'
             justifyContent='space-between'
             alignItems='flex-end'
-            padding='0 20px 30px'
+            padding='0 10px 30px'
             >
 
                 <ScoreBox

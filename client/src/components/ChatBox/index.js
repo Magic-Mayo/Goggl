@@ -20,6 +20,7 @@ const ChatBox = ({socket, username}) => {
             alignItems='flex-end'
             justifyContent='space-between'
             w='350px'
+            minWidth='250px'
             h='80vh'
             >
 

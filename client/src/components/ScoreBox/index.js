@@ -7,7 +7,8 @@ const ScoreBox = () => {
 
     return (
         <Wrapper
-        w='400px'
+        w='250px'
+        minWidth='125px'
         h='80vh'
         bgColor='rgba(221,221,238,.9)'
         border='2px solid #cdcdcd'

@@ -40,8 +40,8 @@ const Games = ({socket, setViewGames, setInput}) => {
             </Button>
             <Wrapper
             justifyContent='space-around'
+            alignItems='flex-start'
             fontColor='white'
-            h='100%'
             >
                 <P
                 fontS='24px'
@@ -67,6 +67,7 @@ const Games = ({socket, setViewGames, setInput}) => {
             alignItems='center'
             overflowY='scroll'
             className='scroller'
+            h='75%'
             >
                 {games &&
                     games.map((game, ind) => (
