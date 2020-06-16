@@ -65,8 +65,8 @@ const Games = ({socket, setViewGames, setInput}) => {
             flexDirection='column'
             justifyContent='flex-start'
             alignItems='center'
-            overflowY='scroll'
-            className='scroller'
+            overflowY='auto'
+            className={`${games && games.length ? 'scroller' : 'no-cursor'}`}
             h='75%'
             >
                 {games &&
