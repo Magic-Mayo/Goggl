@@ -68,15 +68,22 @@ const Tray = () => {
         alignItems='center'
         justifyContent={loading ? 'center' : 'space-evenly'}
         h='80vh'
+        justifyContent='space-evenly'
+        position='fixed'
+        left='50%'
+        top='50%'
+        transform='translate(-50%, -50%)'
         >
 
             {loading ?
                 <Loading />
             :
                 <>
+
                     <Button
                     w='275px'
                     h='75px'
+                    margin='10px 10px 40px'
                     onClick={handleWordSubmit}
                     >
                         Submit Word!
@@ -88,37 +95,33 @@ const Tray = () => {
                     borderRadius='20px'
                     margin='0 25px'
                     >
-                        {letterArray.map((letter, ind) => (
-                            <>
-                                <Button
-                                w='275px'
-                                h='75px'
-                                onClick={handleWordSubmit}
-                                >
-                                    Submit Word!
-                                </Button>
+                        <Button
+                        w='275px'
+                        h='75px'
+                        onClick={handleWordSubmit}
+                        >
+                            Submit Word!
+                        </Button>
 
-                                <Wrapper
-                                display='grid'
-                                bgColor='#d96a45'
-                                borderRadius='20px'
+                        <Wrapper
+                        display='grid'
+                        bgColor='#d96a45'
+                        borderRadius='20px'
+                        >
+                            {letterArray.map((letter, ind) => (
+                                <Button
+                                key={ind}
+                                onClick={() => handleClick(ind)}
+                                border='1px solid #fff'
+                                bgColor={chosenLetters.includes(ind) ? '#00509c' : '#fcfcfa'}
+                                fontColor={chosenLetters.includes(ind) ? '#fcfcfa' : '#00509c'}
+                                fontS='50px'
+                                fontW='bold'
                                 >
-                                    {letterArray.map((letter, ind) => (
-                                        <Button
-                                        key={ind}
-                                        onClick={() => handleClick(ind)}
-                                        border='1px solid #fff'
-                                        bgColor={chosenLetters.includes(ind) ? '#00509c' : '#fcfcfa'}
-                                        fontColor={chosenLetters.includes(ind) ? '#fcfcfa' : '#00509c'}
-                                        fontS='50px'
-                                        fontW='bold'
-                                        >
-                                            {`${letter} ${firstLetter === ind ? 'asdf' : ''}`}
-                                        </Button>
-                                    ))}
-                                </Wrapper>
-                            </>
-                        ))}
+                                    {`${letter} ${firstLetter === ind ? 'asdf' : ''}`}
+                                </Button>
+                            ))}
+                        </Wrapper>
                     </Wrapper>
                 </>
             }
