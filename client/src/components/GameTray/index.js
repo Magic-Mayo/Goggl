@@ -46,11 +46,16 @@ const Tray = () => {
         flexDirection='column'
         alignItems='center'
         justifyContent='space-evenly'
+        position='fixed'
+        left='50%'
+        top='50%'
+        transform='translate(-50%, -50%)'
         >
 
             <Button
             w='275px'
             h='75px'
+            margin='10px 10px 40px'
             onClick={handleWordSubmit}
             >
                 Submit Word!
