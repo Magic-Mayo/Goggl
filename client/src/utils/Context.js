@@ -18,7 +18,7 @@ export default ({children}) => {
     const [games, setGames] = useState([]);
     const [chat, setChat] = useState([]);
     const [updatedScores, setUpdatedScores] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     
     useEffect(() => {
         socket.on('game-scores', score => {
