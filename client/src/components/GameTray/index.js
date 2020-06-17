@@ -4,7 +4,7 @@ import {SocketContext} from '../../utils/Context';
 import Loading from '../Loading';
 
 const Tray = () => {
-    const {socket, loading, players, scores, updatedScores, setUpdatedScores, setScores} = useContext(SocketContext);
+    const {socket, loading, players, scores, updatedScores, setUpdatedScores, setLoading, setScores} = useContext(SocketContext);
     const [letterArray, setLetterArray] = useState(['A','F','A','E','T','G','L','O','M','N','A','B','W','I','J','L'])
     const [chosenLetters, setChosenLetters] = useState([]);
     const [wordList, setWordList] = useState([]);
@@ -48,6 +48,7 @@ const Tray = () => {
     }
 
     const sendWordList = () => {
+        setLoading(true);
         socket.emit('word-list', wordList);
     }
 
