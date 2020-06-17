@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Wrapper, Button } from '../styledComponents';
+import { Wrapper, Button, P } from '../styledComponents';
 import {SocketContext} from '../../utils/Context';
 import Loading from '../Loading';
 
@@ -9,8 +9,10 @@ const Tray = () => {
     const [chosenLetters, setChosenLetters] = useState([]);
     const [wordList, setWordList] = useState([]);
     const [firstLetter, setFirstLetter] = useState();
+    const [error, setError] = useState();
 
     const handleClick = ind => {
+        setError();
         setChosenLetters(prevLetters => {
             const newArr = [...prevLetters];
             const index = newArr.indexOf(ind);
@@ -33,8 +35,9 @@ const Tray = () => {
         });
     }
 
-    const handleWordSubmit = e => {
-        e.preventDefault();
+    const handleWordSubmit = () => {
+        if(chosenLetters.length < 3) return setError('Word must be at least 3 letters long!');
+
         setWordList(prevWords => {
             const newWord = []
             chosenLetters.forEach(letter => newWord.push(letterArray[letter]));
@@ -68,57 +71,73 @@ const Tray = () => {
         alignItems='center'
         justifyContent={loading ? 'center' : 'space-evenly'}
         h='80vh'
+        justifyContent='space-evenly'
+        position='fixed'
+        left='50%'
+        top='50%'
+        transform='translate(-50%, -50%)'
         >
 
             {loading ?
                 <Loading />
             :
                 <>
+
                     <Button
                     w='275px'
                     h='75px'
+                    margin={error ? '0' : '10px 10px 40px'}
                     onClick={handleWordSubmit}
                     >
                         Submit Word!
                     </Button>
+                    
+                    {error &&
+                        <P
+                        bgColor='rgba(0,0,0,.7)'
+                        padding='5px'
+                        margin='0'
+                        fontColor='red'
+                        fontS='24px'
+                        >
+                            {error}
+                        </P>
+                    }
 
                     <Wrapper
                     display='grid'
                     bgColor='#d96a45'
                     borderRadius='20px'
-                    margin='0 25px'
+                    margin={error ? '0' : '0 25px'}
                     >
-                        {letterArray.map((letter, ind) => (
-                            <>
-                                <Button
-                                w='275px'
-                                h='75px'
-                                onClick={handleWordSubmit}
-                                >
-                                    Submit Word!
-                                </Button>
+                            <Button
+                            w='275px'
+                            h='75px'
+                            margin='10px 10px 40px'
+                            onClick={handleWordSubmit}
+                            >
+                                Submit Word!
+                            </Button>
 
-                                <Wrapper
-                                display='grid'
-                                bgColor='#d96a45'
-                                borderRadius='20px'
-                                >
-                                    {letterArray.map((letter, ind) => (
-                                        <Button
-                                        key={ind}
-                                        onClick={() => handleClick(ind)}
-                                        border='1px solid #fff'
-                                        bgColor={chosenLetters.includes(ind) ? '#00509c' : '#fcfcfa'}
-                                        fontColor={chosenLetters.includes(ind) ? '#fcfcfa' : '#00509c'}
-                                        fontS='50px'
-                                        fontW='bold'
-                                        >
-                                            {`${letter} ${firstLetter === ind ? 'asdf' : ''}`}
-                                        </Button>
-                                    ))}
-                                </Wrapper>
-                            </>
-                        ))}
+                            <Wrapper
+                            display='grid'
+                            bgColor='#d96a45'
+                            borderRadius='20px'
+                            >
+                                {letterArray.map((letter, ind) => (
+                                    <Button
+                                    key={ind}
+                                    onClick={() => handleClick(ind)}
+                                    border='1px solid #fff'
+                                    bgColor={chosenLetters.includes(ind) ? '#00509c' : '#fcfcfa'}
+                                    fontColor={chosenLetters.includes(ind) ? '#fcfcfa' : '#00509c'}
+                                    fontS='50px'
+                                    fontW='bold'
+                                    >
+                                        {`${letter} ${firstLetter === ind ? 'asdf' : ''}`}
+                                    </Button>
+                                ))}
+                            </Wrapper>
                     </Wrapper>
                 </>
             }

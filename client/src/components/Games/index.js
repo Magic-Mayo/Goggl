@@ -42,7 +42,6 @@ const Games = ({socket, setViewGames, setInput}) => {
             justifyContent='space-around'
             alignItems='flex-start'
             fontColor='white'
-            h='100%'
             >
                 <P
                 fontS='24px'
@@ -66,8 +65,9 @@ const Games = ({socket, setViewGames, setInput}) => {
             flexDirection='column'
             justifyContent='flex-start'
             alignItems='center'
-            overflowY='scroll'
-            className='scroller'
+            overflowY='auto'
+            className={`${games && games.length ? 'scroller' : 'no-cursor'}`}
+            h='75%'
             >
                 {games &&
                     games.map((game, ind) => (
