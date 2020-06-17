@@ -4,10 +4,13 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import {BrowserRouter as Router} from 'react-router-dom';
+import SocketContext from './utils/Context';
 
 ReactDOM.render(
     <Router>
-        <App />
+        <SocketContext>
+            <App />
+        </SocketContext>
     </Router>,
   document.getElementById('root')
 );
