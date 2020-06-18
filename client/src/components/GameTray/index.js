@@ -9,7 +9,7 @@ const Tray = () => {
     const [wordList, setWordList] = useState([]);
     const [firstLetter, setFirstLetter] = useState();
     const [error, setError] = useState();
-    const [timer, setTimer] = useState(5);
+    const [timer, setTimer] = useState(10);
     const [countdown, setCountdown] = useState({
         isOn: false,
         time: 3
@@ -61,27 +61,29 @@ const Tray = () => {
     }
 
     const startCoutdown = () => {
+        setUpdatedScores([]);
         setCountdown(prevState => ({...prevState, isOn: true}));
     }
 
     useEffect(() => {
-        if(updatedScores.length && updatedScores.length >= players.length){
-            
-            setPlayers(prevScores => {
-                let newScores;
+        setPlayers(prevScores => {
+            if(updatedScores.length && updatedScores.length >= players.length){
+                const newScores = [];
                 
                 updatedScores.map(score => {
                     prevScores.forEach(player => {
                         if(player.username === score.username){
                             score.score += player.score;
-                            newScores = {score: score.score, username: score.username};
+                            newScores.push({score: score.score, username: score.username});
                         }
                     });
 
                 });
                 return newScores;
-            });
-        }
+            }
+
+            return prevScores;
+        });
     }, [updatedScores]);
 
     useEffect(() => {
@@ -121,27 +123,39 @@ const Tray = () => {
         flexDirection='column'
         alignItems='center'
         justifyContent={loading ? 'center' : 'space-evenly'}
-        h='80vh'
         justifyContent='space-evenly'
         position='fixed'
         left='50%'
         top='50%'
-        transform='translate(-50%, -50%)'
+        transForm='translate(-50%, -47%)'
         >
 
             {loading ?
                 <>
-                    <Button
-                    w='275px'
-                    h='75px'
-                    onClick={handleReady}
-                    >
-                        Ready!
-                    </Button>
                     {countdown.isOn ?
-                        <P>{countdown.time}</P>
+                        <Wrapper
+                        bgColor={`rgba(${countdown.time % 2 === 0 ? '0,0,0' : '255,0,0' }, .4)`}
+                        borderRadius='50%'
+                        padding='5px'
+                        w='160px'
+                        h='160px'
+                        >
+                            <P
+                            fontS='160px'
+                            fontW='bold'
+                            fontColor={countdown.time % 2 === 0 ? 'red' : ''}
+                            >
+                                {countdown.time}
+                            </P>
+                        </Wrapper>
                     :
-                        <Loading />
+                        <Button
+                        w='275px'
+                        h='75px'
+                        onClick={handleReady}
+                        >
+                            Ready!
+                        </Button>
                     }
                 </>
             :
@@ -169,9 +183,10 @@ const Tray = () => {
                     }
 
                     <Wrapper
-                    display='grid'
+                    disp='grid'
                     bgColor='#d96a45'
                     borderRadius='20px'
+                    margin='0 0 20px'
                     >
                         {letterArray.map((letter, ind) => (
                             <Button
@@ -187,14 +202,22 @@ const Tray = () => {
                             </Button>
                         ))}
                     </Wrapper>
-                    <Wrapper>
-                        <P>
+
+                    <Wrapper
+                    bgColor='rgba(0,0,0,0.4)'
+                    padding='10px'
+                    borderRadius='2px'
+                    >
+                        <P
+                        fontS='32px'
+                        fontColor={timer < 11 ? timer % 2 === 0 ? '#ddd' : 'red' : '#ddd'}
+                        >
                             {
                                 timer < 120 ?
-                                timer < 60 ? `0:${timer}` :
-                                `1:${timer % 60}` :
+                                timer < 60 ? `0:${timer < 10 ? `0${timer}` : timer}` :
+                                `1:${timer % 60 < 10 ? `0${timer % 60}` : timer % 60}` :
                                 '2:00'
-                            }
+                            }{' '}
                             left
                         </P>
                     </Wrapper>
