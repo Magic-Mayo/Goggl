@@ -39,7 +39,7 @@ const ChatBox = ({socket, username}) => {
                             <Wrapper
                             key={ind}
                             position='relative'
-                            transform={chat.username === username ? 'translateX(70px)' : ''}
+                            transForm={chat.username === username ? 'translateX(70px)' : ''}
                             w='80%'
                             borderRadius='10%'
                             margin='5px'

@@ -7,7 +7,7 @@ const Modal = ({children}) => {
         <Wrapper
         position='fixed'
         left='50%'
-        transform='translateX(-50%)'
+        transForm='translateX(-50%)'
         top='30vh'
         w='300px'
         h='150px'

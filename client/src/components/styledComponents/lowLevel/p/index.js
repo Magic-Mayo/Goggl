@@ -9,7 +9,7 @@ export default styled.p`
     height: ${({h}) => h || ''};
     background-color: ${({bgColor}) => bgColor || ''};
     color: ${({fontColor}) => fontColor || ''};
-    margin: ${({margin}) => margin || ''};
+    margin: ${({margin}) => margin || '0'};
     padding: ${({padding}) => padding || ''};
     white-space: ${({whiteSpace}) => whiteSpace || ''};
     line-height: ${({lineHeight}) => lineHeight || ''};
