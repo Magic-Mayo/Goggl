@@ -12,19 +12,16 @@ if(process.env.NODE_ENV === 'production'){
 export const SocketContext = createContext(null);
 
 export default ({children}) => {
-    const [scores, setScores] = useState([]);
+    const [letterArray, setLetterArray] = useState([]);
     const [players, setPlayers] = useState([]);
     const [username, setUsername] = useState('');
     const [games, setGames] = useState([]);
     const [chat, setChat] = useState([]);
     const [updatedScores, setUpdatedScores] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     
     useEffect(() => {
-        socket.on('game-scores', score => {
-            setScores(score);
-        });
-
+        
         socket.on('games-list', gameList => {
             setGames(gameList);
         });
@@ -34,12 +31,16 @@ export default ({children}) => {
         });
 
         socket.on('join', findPlayers => {
-            setPlayers(prevPlayers => [...prevPlayers, findPlayers]);
+            setPlayers(findPlayers);
         });
 
         socket.on('scores', playerScores => {
             setUpdatedScores(prevUpdatedScores => [...prevUpdatedScores, playerScores]);
-        })
+        });
+
+        socket.on('new-letters', newLetters => {
+            setLetterArray(newLetters);
+        });
 
         return () => {
             socket.off('game-scores');
@@ -54,19 +55,19 @@ export default ({children}) => {
         value={{
             loading,
             socket,
-            scores,
+            letterArray,
             updatedScores,
             players,
             username,
             games,
             chat,
             setLoading,
-            setScores,
-            setUpdateScores: setUpdatedScores,
+            setUpdatedScores,
             setPlayers,
             setUsername,
             setGames,
-            setChat
+            setChat,
+            setLetterArray
         }}
         >
             {children}

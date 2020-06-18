@@ -25,15 +25,15 @@ const Home = () => {
         
         socket.emit('set-username', input.username, username => {
             setUsername(username);
-            socket.emit('join-room', input.room, create => {
-                if(create.msg){
-                    setInput(prevInput => ({...prevInput, room: create.room}))
-                    return setModal(create.msg);
+            socket.emit('join-room', input.room, join => {
+                if(join.msg){
+                    setInput(prevInput => ({...prevInput, room: join.room}));
+                    return setModal(join.msg);
                 }
                 
-                setPlayers(create.username);
+                setPlayers(join);
                 history.push('/game');
-            })
+            });
         });
     }
     
@@ -45,21 +45,21 @@ const Home = () => {
         
         socket.emit('set-username', input.username, username => {
             setUsername(username);
-            socket.emit('create-room', input.room, join => {
-                if(join.msg){
-                    setInput(prevInput => ({...prevInput, room: join.room}))
-                    return setModal(join.msg);
+            socket.emit('create-room', input.room, create => {
+                if(create.msg){
+                    setInput(prevInput => ({...prevInput, room: create.room}));
+                    return setModal(create.msg);
                 }
 
-                setPlayers(join.user)
+                setPlayers([create]);
                 history.push('/game');
-            })
-        })
+            });
+        });
     }
 
     const handleInput = e => {
         const {name, value} = e.target;
-        setInput(prevInput => ({...prevInput, [name]: value}))
+        setInput(prevInput => ({...prevInput, [name]: value}));
     }
 
     return (

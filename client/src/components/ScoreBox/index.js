@@ -3,7 +3,7 @@ import { Wrapper, P } from '../styledComponents';
 import { SocketContext } from '../../utils/Context';
 
 const ScoreBox = () => {
-    const {scores, players} = useContext(SocketContext);
+    const {players} = useContext(SocketContext);
 
     return (
         <Wrapper
@@ -17,23 +17,7 @@ const ScoreBox = () => {
         className='scroller no-cursor'
         overflowY='scroll'
         >
-            {scores &&
-                scores.map((score, ind) => (
-                    <Wrapper
-                    key={ind}
-                    h='50px'
-                    w='100%'
-                    bgColor={ind % 2 === 0 ? 'rgba(85,85,85,.5)' : ''}
-                    borderBottom='2px solid #ccc'
-                    >
-                        <P>
-                            {score.username}: {score.score}
-                        </P>
-                    </Wrapper>
-                ))
-            }
-
-            {!scores && players &&
+            {players.length > 0 &&
                 players.map((player, ind) => (
                     <Wrapper
                     key={ind}
@@ -43,11 +27,12 @@ const ScoreBox = () => {
                     borderBottom='2px solid #ccc'
                     >
                         <P>
-                            {player}: 0
+                            {player.username}: {player.score}
                         </P>
                     </Wrapper>
                 ))
             }
+
         </Wrapper>
     )
 }
