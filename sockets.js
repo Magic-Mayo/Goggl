@@ -107,32 +107,42 @@ const verifyWords = (socket, wordsArr) => {
 const randomLetters = () => {
     const ltrArr = [];
     // const ltrArr = [
-    //     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-    //     'N', 'O', 'P', 'Qu', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
-    // ];
-
-    const ltrDice = [
-        ['A','A','E','E','G','N'],
-        ['A','B','B','J','O','O'],
-        ['A','C','H','O','P','S'],
-        ['A','F','F','K','P','S'],
-        ['A','O','O','T','T','W'],
-        ['C','I','M','O','T','U'],
-        ['D','E','I','L','R','X'],
-        ['D','E','L','R','V','Y'],
-        ['D','I','S','T','T','Y'],
-        ['E','E','G','H','N','W'],
-        ['E','E','I','N','S','U'],
-        ['E','H','R','T','V','W'],
-        ['E','I','O','S','S','T'],
-        ['E','L','R','T','T','Y'],
-        ['H','I','M','N','U','Qu'],
-        ['H','L','N','N','R','Z']
+        //     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+        //     'N', 'O', 'P', 'Qu', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+        // ];
+        
+        const ltrDice = [
+            ['A','A','E','E','G','N'],
+            ['A','B','B','J','O','O'],
+            ['A','C','H','O','P','S'],
+            ['A','F','F','K','P','S'],
+            ['A','O','O','T','T','W'],
+            ['C','I','M','O','T','U'],
+            ['D','E','I','L','R','X'],
+            ['D','E','L','R','V','Y'],
+            ['D','I','S','T','T','Y'],
+            ['E','E','G','H','N','W'],
+            ['E','E','I','N','S','U'],
+            ['E','H','R','T','V','W'],
+            ['E','I','O','S','S','T'],
+            ['E','L','R','T','T','Y'],
+            ['H','I','M','N','U','Qu'],
+            ['H','L','N','N','R','Z']
     ];
-
+    
     ltrDice.forEach(die => {
         ltrArr.push(die[Math.floor(Math.random() * 6)])
-    })
+    });
+
+    let currentIndex = ltrArr.length, temporaryValue, randomIndex;
+    
+    while (0 !== currentIndex) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+        temporaryValue = ltrArr[currentIndex];
+        ltrArr[currentIndex] = ltrArr[randomIndex];
+        ltrArr[randomIndex] = temporaryValue;
+    }
 
     return ltrArr;
 }
