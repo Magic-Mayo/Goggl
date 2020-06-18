@@ -4,12 +4,16 @@ import {SocketContext} from '../../utils/Context';
 import Loading from '../Loading';
 
 const Tray = () => {
-    const {socket, loading, players, scores, updatedScores, setUpdatedScores, setLoading, setScores} = useContext(SocketContext);
-    const [letterArray, setLetterArray] = useState(['A','F','A','E','T','G','L','O','M','N','A','B','W','I','J','L'])
+    const {socket, letterArray, loading, players, updatedScores, setPlayers, setLetterArray, setUpdatedScores, setLoading} = useContext(SocketContext);
     const [chosenLetters, setChosenLetters] = useState([]);
     const [wordList, setWordList] = useState([]);
     const [firstLetter, setFirstLetter] = useState();
     const [error, setError] = useState();
+    const [timer, setTimer] = useState(5);
+    const [countdown, setCountdown] = useState({
+        isOn: false,
+        time: 3
+    });
 
     const handleClick = ind => {
         setError();
@@ -47,24 +51,70 @@ const Tray = () => {
         setChosenLetters([]);
     }
 
+    const handleReady = () => {
+        socket.emit('ready', letters => setLetterArray(letters));
+    }
+
     const sendWordList = () => {
         setLoading(true);
-        socket.emit('word-list', wordList);
+        socket.emit('word-list', wordList, newScore => setUpdatedScores(prevUpdatedScores => [...prevUpdatedScores, newScore]));
+    }
+
+    const startCoutdown = () => {
+        setCountdown(prevState => ({...prevState, isOn: true}));
     }
 
     useEffect(() => {
-        if(updatedScores && players && updatedScores.length >= players.length){
-            setScores(prevScores => {
-                return updatedScores.map(score => {
-                    for(let i in prevScores){
-                        if(prevScores[i].username === score.username){
-                            prevScores[i].score += score.score;
+        if(updatedScores.length && updatedScores.length >= players.length){
+            
+            setPlayers(prevScores => {
+                let newScores;
+                
+                updatedScores.map(score => {
+                    prevScores.forEach(player => {
+                        if(player.username === score.username){
+                            score.score += player.score;
+                            newScores = {score: score.score, username: score.username};
                         }
-                    }
+                    });
+
                 });
+                return newScores;
             });
         }
-    }, [updatedScores])
+    }, [updatedScores]);
+
+    useEffect(() => {
+        if(letterArray.length) startCoutdown();
+    }, [letterArray]);
+
+    useEffect(() => {
+        if(countdown.time < 1){
+            setCountdown({time: 3, isOn: false});
+            return setLoading(false);
+        }
+
+        const countdownInterval = setInterval(() => {
+            setCountdown(prevState => ({...prevState, time: prevState.isOn ? prevState.time - 1 : 3}));
+        }, 1000);
+
+        return () => clearInterval(countdownInterval);
+    }, [countdown]);
+
+    useEffect(() => {
+        if(loading) return;
+
+        if(timer < 1){
+            setTimer(120);
+            return sendWordList();
+        }
+
+        const timerInterval = setInterval(() => {
+            setTimer(prevTime => prevTime - 1);
+        }, 1000)
+
+        return () => clearInterval(timerInterval);
+    }, [timer, loading])
 
     return (
         <Wrapper
@@ -80,7 +130,20 @@ const Tray = () => {
         >
 
             {loading ?
-                <Loading />
+                <>
+                    <Button
+                    w='275px'
+                    h='75px'
+                    onClick={handleReady}
+                    >
+                        Ready!
+                    </Button>
+                    {countdown.isOn ?
+                        <P>{countdown.time}</P>
+                    :
+                        <Loading />
+                    }
+                </>
             :
                 <>
 
@@ -109,36 +172,31 @@ const Tray = () => {
                     display='grid'
                     bgColor='#d96a45'
                     borderRadius='20px'
-                    margin={error ? '0' : '0 25px'}
                     >
+                        {letterArray.map((letter, ind) => (
                             <Button
-                            w='275px'
-                            h='75px'
-                            margin='10px 10px 40px'
-                            onClick={handleWordSubmit}
+                            key={ind}
+                            onClick={() => handleClick(ind)}
+                            border='1px solid #fff'
+                            bgColor={chosenLetters.includes(ind) ? '#00509c' : '#fcfcfa'}
+                            fontColor={chosenLetters.includes(ind) ? '#fcfcfa' : '#00509c'}
+                            fontS='50px'
+                            fontW='bold'
                             >
-                                Submit Word!
+                                {letter}
                             </Button>
-
-                            <Wrapper
-                            display='grid'
-                            bgColor='#d96a45'
-                            borderRadius='20px'
-                            >
-                                {letterArray.map((letter, ind) => (
-                                    <Button
-                                    key={ind}
-                                    onClick={() => handleClick(ind)}
-                                    border='1px solid #fff'
-                                    bgColor={chosenLetters.includes(ind) ? '#00509c' : '#fcfcfa'}
-                                    fontColor={chosenLetters.includes(ind) ? '#fcfcfa' : '#00509c'}
-                                    fontS='50px'
-                                    fontW='bold'
-                                    >
-                                        {`${letter} ${firstLetter === ind ? 'asdf' : ''}`}
-                                    </Button>
-                                ))}
-                            </Wrapper>
+                        ))}
+                    </Wrapper>
+                    <Wrapper>
+                        <P>
+                            {
+                                timer < 120 ?
+                                timer < 60 ? `0:${timer}` :
+                                `1:${timer % 60}` :
+                                '2:00'
+                            }
+                            left
+                        </P>
                     </Wrapper>
                 </>
             }
