@@ -57,6 +57,7 @@ const Tray = () => {
 
     const sendWordList = () => {
         setLoading(true);
+        setChosenLetters([]);
         socket.emit('word-list', wordList, newScore => setUpdatedScores(prevUpdatedScores => [...prevUpdatedScores, newScore]));
     }
 
