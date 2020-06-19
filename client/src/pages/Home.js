@@ -28,7 +28,7 @@ const Home = () => {
             socket.emit('join-room', input.room, join => {
                 if(join.msg){
                     setInput(prevInput => ({...prevInput, room: join.room}));
-                    return setModal(join.msg);
+                    return setModal(join);
                 }
                 
                 setPlayers(join);
@@ -48,7 +48,7 @@ const Home = () => {
             socket.emit('create-room', input.room, create => {
                 if(create.msg){
                     setInput(prevInput => ({...prevInput, room: create.room}));
-                    return setModal(create.msg);
+                    return setModal(create);
                 }
 
                 setPlayers([create]);
@@ -104,15 +104,15 @@ const Home = () => {
                             <P
                             fontS='18px'
                             >
-                                {modal}
+                                {modal.msg}
                             </P>
                             <Button
                             w='200px'
                             h='50px'
                             fontS='22px'
-                            onClick={createOrJoin ? handleJoinRoom : handleCreateRoom}
+                            onClick={modal.full ? () => setModal() : createOrJoin ? handleJoinRoom : handleCreateRoom}
                             >
-                                {createOrJoin ? 'Join Room' : 'Create Room'}
+                                {modal.full ? 'Continue' : createOrJoin ? 'Join Room' : 'Create Room'}
                             </Button>
                         </Modal>
                     }
