@@ -171,12 +171,10 @@ module.exports = io => {
         
         // create room
         socket.on('create-room', (room, createRoom) => {
+            const foundRoom = io.sockets.adapter.rooms[room];
+            
             // If room exists will ask user to confirm if they want to try and join
-            for(let key in io.sockets.adapter.rooms){
-                if(key === room){
-                    return createRoom({msg: 'Room already exists.  Would you like to request access?', room: room})
-                }
-            }
+            if(foundRoom) return createRoom({msg: 'Room already exists.  Would you like to request access?', room: room});
 
             // Leave all other rooms before joining
             for(let key in socket.rooms){
@@ -188,27 +186,21 @@ module.exports = io => {
             }
 
             socket.join(room, () => {
+                
                 clearInterval(emitGames);
                 socket.room = room;
-                socket.roomOwner = true;
                 createRoom({username: socket.username, score: 0});
             });
         });
         
         // join room
         socket.on('join-room', (room, joinRoom) => {
+            const foundRoom = io.sockets.adapter.rooms[room];
+            
             // Sends mesage back to user if room doesn't exist.  Will create new room with the name they used if confirmed
-            let foundRoom;
-            for(let key in io.sockets.adapter.rooms){
-                if(key === room){
-                    foundRoom = true;
-                    break;
-                }
-            }
-
-            if(!foundRoom){            
-                return joinRoom({msg: 'Room does not exist.  Would you like to create it?', room: room})
-            }
+            if(!foundRoom) return joinRoom({msg: 'Room does not exist.  Would you like to create it?', room: room});
+            
+            if(foundRoom.length > 7) return joinRoom({msg: 'Room is currently full! Try again later or join a different game!', full: true});
 
             // Leave all rooms before joining
             for(let key in socket.rooms){
@@ -219,7 +211,7 @@ module.exports = io => {
                     break;
                 }
             }
-
+            
             socket.join(room, () => {
                 socket.room = room;
                 socket.to(room).emit('chat', {msg: `${socket.username} has entered the room!`, username: 'SERVER UNDERLORDS'});
@@ -229,7 +221,6 @@ module.exports = io => {
 
         // Verify words and set score
         socket.on('word-list', (words, sendScore) => {
-            socket.ready = false;
             const newScore = verifyWords(socket, words);
             socket.to(socket.room).emit('scores', newScore);
             sendScore(newScore);
@@ -255,6 +246,7 @@ module.exports = io => {
                 const newLetters = randomLetters();
                 ready(newLetters);
                 socket.to(socket.room).emit('new-letters', newLetters);
+                socket.ready = false;
             }
         })
 
