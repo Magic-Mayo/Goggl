@@ -214,7 +214,7 @@ module.exports = io => {
             
             socket.join(room, () => {
                 socket.room = room;
-                socket.to(room).emit('chat', {msg: `${socket.username} has entered the room!`, username: 'SERVER UNDERLORDS'});
+                socket.to(room).emit('chat', {msg: `${socket.username} has entered the room!`});
                 joinRoom(findPlayersInRoom(io, socket));
             });
         });
