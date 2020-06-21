@@ -242,12 +242,19 @@ module.exports = io => {
         socket.on('ready', ready => {
             socket.ready = true;
 
+            socket.to(socket.room).emit('chat', {msg: `${socket.username} is ready!`});
+            
             if(playersReady(io, socket).length >= findPlayersInRoom(io, socket).length){
                 const newLetters = randomLetters();
                 ready(newLetters);
                 socket.to(socket.room).emit('new-letters', newLetters);
                 socket.ready = false;
             }
+        });
+        
+        socket.on('cancel-ready', cancel => {
+            socket.ready = false;
+            socket.to(socket.room).emit('chat', {msg: `${socket.username} has decided they actually weren't ready!`});
         })
 
         // send messages
