@@ -7,9 +7,9 @@ const Tray = () => {
     const {socket, letterArray, loading, players, updatedScores, setPlayers, setLetterArray, setUpdatedScores, setLoading} = useContext(SocketContext);
     const [chosenLetters, setChosenLetters] = useState([]);
     const [wordList, setWordList] = useState([]);
-    const [firstLetter, setFirstLetter] = useState();
+    const [showBoard, setShowBoard] = useState();
     const [error, setError] = useState();
-    const [timer, setTimer] = useState(10);
+    const [timer, setTimer] = useState();
     const [countdown, setCountdown] = useState({
         isOn: false,
         time: 3
@@ -52,7 +52,13 @@ const Tray = () => {
     }
 
     const handleReady = () => {
+        setLoading(true);
         socket.emit('ready', letters => setLetterArray(letters));
+    }
+    
+    const handleCancelReady = () => {
+        setLoading(false);
+        socket.emit('cancel-ready', letters => setLetterArray(letters));
     }
 
     const sendWordList = () => {
@@ -88,12 +94,15 @@ const Tray = () => {
     }, [updatedScores]);
 
     useEffect(() => {
-        if(letterArray.length) startCoutdown();
+        if(letterArray.length > 0) startCoutdown();
     }, [letterArray]);
 
     useEffect(() => {
+        if(!countdown.isOn) return;
+
         if(countdown.time < 1){
             setCountdown({time: 3, isOn: false});
+            setTimer(120);
             return setLoading(false);
         }
 
@@ -102,10 +111,10 @@ const Tray = () => {
         }, 1000);
 
         return () => clearInterval(countdownInterval);
-    }, [countdown]);
+    }, [countdown.isOn]);
 
     useEffect(() => {
-        if(loading) return;
+        if(loading || letterArray.length === 0) return;
 
         if(timer < 1){
             setTimer(120);
@@ -131,98 +140,107 @@ const Tray = () => {
         transForm='translate(-50%, -47%)'
         >
 
-            {loading ?
+            {countdown.isOn &&
+                <Wrapper
+                bgColor={`rgba(${countdown.time % 2 === 0 ? '0,0,0' : '255,0,0' }, .4)`}
+                borderRadius='50%'
+                padding='5px'
+                w='160px'
+                h='160px'
+                >
+                    <P
+                    fontS='160px'
+                    fontW='bold'
+                    fontColor={countdown.time % 2 === 0 ? 'red' : ''}
+                    >
+                        {countdown.time}
+                    </P>
+                </Wrapper>
+            }
+            {letterArray.length === 0 && loading ?
                 <>
-                    {countdown.isOn ?
-                        <Wrapper
-                        bgColor={`rgba(${countdown.time % 2 === 0 ? '0,0,0' : '255,0,0' }, .4)`}
-                        borderRadius='50%'
-                        padding='5px'
-                        w='160px'
-                        h='160px'
-                        >
-                            <P
-                            fontS='160px'
-                            fontW='bold'
-                            fontColor={countdown.time % 2 === 0 ? 'red' : ''}
-                            >
-                                {countdown.time}
-                            </P>
-                        </Wrapper>
-                    :
-                        <Button
-                        w='275px'
-                        h='75px'
-                        onClick={handleReady}
-                        >
-                            Ready!
-                        </Button>
-                    }
-                </>
-            :
-                <>
-
                     <Button
                     w='275px'
                     h='75px'
-                    margin={error ? '0' : '10px 10px 40px'}
-                    onClick={handleWordSubmit}
+                    bgColor='red'
+                    onClick={handleCancelReady}
                     >
-                        Submit Word!
+                        Cancel Ready
                     </Button>
-                    
-                    {error &&
-                        <P
-                        bgColor='rgba(0,0,0,.7)'
-                        padding='5px'
-                        margin='0'
-                        fontColor='red'
-                        fontS='24px'
-                        >
-                            {error}
-                        </P>
-                    }
-
-                    <Wrapper
-                    disp='grid'
-                    bgColor='#d96a45'
-                    borderRadius='20px'
-                    margin='0 0 20px'
-                    >
-                        {letterArray.map((letter, ind) => (
-                            <Button
-                            key={ind}
-                            onClick={() => handleClick(ind)}
-                            border='1px solid #fff'
-                            bgColor={chosenLetters.includes(ind) ? '#00509c' : '#fcfcfa'}
-                            fontColor={chosenLetters.includes(ind) ? '#fcfcfa' : '#00509c'}
-                            fontS='50px'
-                            fontW='bold'
-                            >
-                                {letter}
-                            </Button>
-                        ))}
-                    </Wrapper>
-
-                    <Wrapper
-                    bgColor='rgba(0,0,0,0.4)'
-                    padding='10px'
-                    borderRadius='2px'
-                    >
-                        <P
-                        fontS='32px'
-                        fontColor={timer < 11 ? timer % 2 === 0 ? '#ddd' : 'red' : '#ddd'}
-                        >
-                            {
-                                timer < 120 ?
-                                timer < 60 ? `0:${timer < 10 ? `0${timer}` : timer}` :
-                                `1:${timer % 60 < 10 ? `0${timer % 60}` : timer % 60}` :
-                                '2:00'
-                            }{' '}
-                            left
-                        </P>
-                    </Wrapper>
+                    <Loading />
                 </>
+            :
+                <Button
+                w='275px'
+                h='75px'
+                onClick={handleReady}
+                >
+                    Ready!
+                </Button>
+            }
+
+            {letterArray.length > 0 && !countdown.isOn &&
+                <Button
+                w='275px'
+                h='75px'
+                margin={error ? '0' : '10px 10px 40px'}
+                onClick={handleWordSubmit}
+                >
+                    Submit Word!
+                </Button>
+            }
+            
+            {error &&
+                <P
+                bgColor='rgba(0,0,0,.7)'
+                padding='5px'
+                margin='0'
+                fontColor='red'
+                fontS='24px'
+                >
+                    {error}
+                </P>
+            }
+
+            <Wrapper
+            disp='grid'
+            bgColor='#d96a45'
+            borderRadius='20px'
+            margin='0 0 20px'
+            >
+                {letterArray.map((letter, ind) => (
+                    <Button
+                    key={ind}
+                    onClick={() => handleClick(ind)}
+                    border='1px solid #fff'
+                    bgColor={chosenLetters.includes(ind) ? '#00509c' : '#fcfcfa'}
+                    fontColor={chosenLetters.includes(ind) ? '#fcfcfa' : '#00509c'}
+                    fontS='50px'
+                    fontW='bold'
+                    >
+                        {letter}
+                    </Button>
+                ))}
+            </Wrapper>
+
+            {!countdown.isOn && letterArray.length > 0 &&
+                <Wrapper
+                bgColor='rgba(0,0,0,0.4)'
+                padding='10px'
+                borderRadius='2px'
+                >
+                    <P
+                    fontS='32px'
+                    fontColor={timer < 11 ? timer % 2 === 0 ? '#ddd' : 'red' : '#ddd'}
+                    >
+                        {timer < 120 ?
+                        timer < 60 ? `0:${timer < 10 ? `0${timer}` : timer}` :
+                        `1:${timer % 60 < 10 ? `0${timer % 60}` : timer % 60}` :
+                        '2:00'}
+                        {' '}
+                        left
+                    </P>
+                </Wrapper>            
             }
         </Wrapper>
     )
