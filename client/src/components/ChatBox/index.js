@@ -39,13 +39,13 @@ const ChatBox = ({socket, username}) => {
                             <Wrapper
                             key={ind}
                             position='relative'
-                            transForm={chat.username === username ? 'translateX(70px)' : ''}
+                            transForm={chat.username === username ? 'translateX(70px)' : chat.username === 'server' ? 'translateX(35px)' : ''}
                             w='80%'
                             borderRadius='10%'
                             margin='5px'
                             padding='0 7px'
-                            bgColor={chat.username === username ? '#2fc' : '#cf2'}
-                            justifyContent={chat.username === username ? 'flex-end' : 'flex-start'}
+                            bgColor={chat.username === username ? '#2fc' : chat.username === 'server' ? '#ccc' : '#cf2'}
+                            justifyContent={chat.username === username ? 'flex-end' : chat.username === 'server' ? 'center' : 'flex-start'}
                             >
                                 <P
                                 margin='5px'
