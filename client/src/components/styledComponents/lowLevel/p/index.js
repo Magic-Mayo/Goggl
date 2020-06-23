@@ -14,4 +14,5 @@ export default styled.p`
     white-space: ${({whiteSpace}) => whiteSpace || ''};
     line-height: ${({lineHeight}) => lineHeight || ''};
     max-width: ${({maxWidth}) => maxWidth || ''};
+    word-break: break-word;
     `
