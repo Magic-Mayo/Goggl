@@ -206,7 +206,7 @@ const Tray = ({windowWidth}) => {
                 </P>
             }
 
-            {letterArray.length > 0 && !countdown.isOn &&
+            {!countdown.isOn && letterArray.length > 0 &&
                 <>
                     <Wrapper
                     disp='grid'
@@ -217,8 +217,8 @@ const Tray = ({windowWidth}) => {
                         {letterArray.map((letter, ind) => (
                             <Button
                             key={ind}
-                            w={windowWidth < 600 ? '19vw' : ''}
-                            h={windowWidth < 600 ? '19vw' : ''}
+                            w={windowWidth < 600 ? '75px' : ''}
+                            h={windowWidth < 600 ? '75px' : ''}
                             margin={windowWidth < 600 ? '7px' : ''}
                             onClick={() => handleClick(ind)}
                             border='1px solid #fff'
