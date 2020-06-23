@@ -30,7 +30,10 @@ export default styled.div`
     color: ${({fontColor}) => fontColor || ''};
     z-index: ${({zIndex}) => zIndex || ''};
     overflow-y: ${({overflowY}) => overflowY || ''};
+    overflow-x: ${({overflowX}) => overflowX || ''};
     border-radius: ${({borderRadius}) => borderRadius || ''};
+    right: ${({right}) => right || ''};
+    transition: all .6s ease-in-out;
 
     .scroller::-webkit-scrollbar-thumb {
         width: 10px;
