@@ -3,7 +3,7 @@ import { Wrapper, Button, P } from '../styledComponents';
 import {SocketContext} from '../../utils/Context';
 import Loading from '../Loading';
 
-const Tray = () => {
+const Tray = ({windowWidth}) => {
     const {socket, letterArray, loading, players, updatedScores, setPlayers, setLetterArray, setUpdatedScores, setLoading} = useContext(SocketContext);
     const [chosenLetters, setChosenLetters] = useState([]);
     const [wordList, setWordList] = useState([]);
@@ -136,10 +136,11 @@ const Tray = () => {
         alignItems='center'
         justifyContent={loading ? 'center' : 'space-evenly'}
         justifyContent='space-evenly'
-        position='fixed'
+        position={windowWidth < 600 ? '' : 'fixed'}
         left='50%'
         top='50%'
-        transForm='translate(-50%, -47%)'
+        transForm={windowWidth < 600 ? '' : 'translate(-50%, -47%)'}
+        w={windowWidth < 600 ? '95vw' : ''}
         >
 
             {countdown.isOn &&
@@ -216,6 +217,9 @@ const Tray = () => {
                         {letterArray.map((letter, ind) => (
                             <Button
                             key={ind}
+                            w={windowWidth < 600 ? '19vw' : ''}
+                            h={windowWidth < 600 ? '19vw' : ''}
+                            margin={windowWidth < 600 ? '7px' : ''}
                             onClick={() => handleClick(ind)}
                             border='1px solid #fff'
                             bgColor={chosenLetters.includes(ind) ? '#00509c' : '#fcfcfa'}
