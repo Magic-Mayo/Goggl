@@ -7,7 +7,7 @@ const Tray = ({windowWidth}) => {
     const {socket, letterArray, loading, players, updatedScores, setPlayers, setLetterArray, setUpdatedScores, setLoading} = useContext(SocketContext);
     const [chosenLetters, setChosenLetters] = useState([]);
     const [wordList, setWordList] = useState([]);
-    const [showBoard, setShowBoard] = useState();
+    const [showBoard, setShowBoard] = useState(false);
     const [error, setError] = useState();
     const [timer, setTimer] = useState();
     const [countdown, setCountdown] = useState({
@@ -109,6 +109,7 @@ const Tray = ({windowWidth}) => {
             setCountdown({time: 3, isOn: false});
             setTimer(120);
             clearInterval(countdownInterval);
+            setShowBoard(true);
             return setLoading(false);
         }
 
@@ -120,6 +121,7 @@ const Tray = ({windowWidth}) => {
 
         if(timer < 1){
             setTimer(120);
+            setShowBoard(false);
             return sendWordList();
         }
 
@@ -173,7 +175,7 @@ const Tray = ({windowWidth}) => {
                     <Loading />
                 </>
             }
-            {letterArray.length === 0 && !loading &&
+            {!showBoard &&
                 <Button
                 w='275px'
                 h='75px'
@@ -183,31 +185,30 @@ const Tray = ({windowWidth}) => {
                 </Button>
             }
 
-            {letterArray.length > 0 && !countdown.isOn &&
-                <Button
-                w='275px'
-                h='75px'
-                margin={error ? '0' : '10px 10px 40px'}
-                onClick={handleWordSubmit}
-                >
-                    Submit Word!
-                </Button>
-            }
-            
-            {error &&
-                <P
-                bgColor='rgba(0,0,0,.7)'
-                padding='5px'
-                margin='0'
-                fontColor='red'
-                fontS='24px'
-                >
-                    {error}
-                </P>
-            }
-
-            {!countdown.isOn && letterArray.length > 0 &&
+            {showBoard &&
                 <>
+                    <Button
+                    w='275px'
+                    h='75px'
+                    margin={error ? '0' : '10px 10px 40px'}
+                    onClick={handleWordSubmit}
+                    >
+                        Submit Word!
+                    </Button>
+                
+                
+                    {error &&
+                        <P
+                        bgColor='rgba(0,0,0,.7)'
+                        padding='5px'
+                        margin='0'
+                        fontColor='red'
+                        fontS='24px'
+                        >
+                            {error}
+                        </P>
+                    }
+
                     <Wrapper
                     disp='grid'
                     bgColor='#d96a45'
