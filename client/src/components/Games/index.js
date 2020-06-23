@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { Wrapper, P, Button } from '../styledComponents';
 import { SocketContext } from '../../utils/Context';
 
-const Games = ({socket, setViewGames, setInput}) => {
+const Games = ({socket, setViewGames, setInput, windowWidth}) => {
     const {games} = useContext(SocketContext);
 
     const handleJoin = room => {
@@ -18,13 +18,12 @@ const Games = ({socket, setViewGames, setInput}) => {
 
     return (
         <Wrapper
-        w='700px'
-        h='80vh'
+        w={windowWidth < 600 ? '90vw' : '700px'}
+        h='75vh'
         bgColor='rgba(50,50,50,.8)'
         flexDirection='column'
         justifyContent='flex-start'
         padding='0 20px'
-        margin='0 0 30px 20px'
         >
             <Button
             onClick={handleRefresh}
@@ -46,19 +45,21 @@ const Games = ({socket, setViewGames, setInput}) => {
                 <P
                 fontS='24px'
                 >
-                    Room name
+                    Room {windowWidth >= 600 && 'name'}
                 </P>
+
+                {windowWidth >= 600 &&
+                    <P
+                    fontS='24px'
+                    >
+                        Room creator
+                    </P>
+                }
 
                 <P
                 fontS='24px'
                 >
-                    Room creator
-                </P>
-
-                <P
-                fontS='24px'
-                >
-                    Players in room
+                    Players {windowWidth >= 600 && 'in room'}
                 </P>
             </Wrapper>
             <Wrapper
