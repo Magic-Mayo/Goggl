@@ -1,14 +1,13 @@
 import React, { useContext } from 'react';
-import { Wrapper, P } from '../styledComponents';
+import { Wrapper, P, Button } from '../styledComponents';
 import { SocketContext } from '../../utils/Context';
 
-const ScoreBox = () => {
+const ScoreBox = ({windowWidth, showScores}) => {
     const {players} = useContext(SocketContext);
 
     return (
         <Wrapper
-        w='250px'
-        minWidth='125px'
+        w={windowWidth < 600 ? '80vw' : '250px'}
         h='80vh'
         bgColor='rgba(221,221,238,.9)'
         border='2px solid #cdcdcd'
@@ -16,6 +15,10 @@ const ScoreBox = () => {
         justifyContent='flex-start'
         className='scroller no-cursor'
         overflowY='scroll'
+        position={windowWidth < 600 ? 'fixed' : ''}
+        transForm={windowWidth < 600 ? showScores ? 'translate(-50%, -50%)' : 'translate(-800px, -50%)' : ''}
+        left={windowWidth < 600 ? '50%' : ''}
+        top={windowWidth < 600 ? '50%' : ''}
         >
             {players.length > 0 &&
                 players.map((player, ind) => (

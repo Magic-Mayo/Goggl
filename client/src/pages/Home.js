@@ -5,6 +5,7 @@ import Form from '../components/Form';
 import Modal from '../components/Modal';
 import Games from '../components/Games';
 import { SocketContext } from '../utils/Context';
+import { useInnerWidth } from '../utils/hooks';
 
 const Home = () => {
     const {socket, setPlayers, setUsername} = useContext(SocketContext);
@@ -16,6 +17,7 @@ const Home = () => {
     const [modal, setModal] = useState();
     const [createOrJoin, setCreateOrJoin] = useState(false);
     const [viewGames, setViewGames] = useState(true);
+    const windowWidth = useInnerWidth();
     
     const handleJoinRoom = () => {
         setCreateOrJoin(false);
@@ -28,7 +30,7 @@ const Home = () => {
             socket.emit('join-room', input.room, join => {
                 if(join.msg){
                     setInput(prevInput => ({...prevInput, room: join.room}));
-                    return setModal(join.msg);
+                    return setModal(join);
                 }
                 
                 setPlayers(join);
@@ -48,7 +50,7 @@ const Home = () => {
             socket.emit('create-room', input.room, create => {
                 if(create.msg){
                     setInput(prevInput => ({...prevInput, room: create.room}));
-                    return setModal(create.msg);
+                    return setModal(create);
                 }
 
                 setPlayers([create]);
@@ -63,7 +65,11 @@ const Home = () => {
     }
 
     return (
-        <>
+        <Wrapper
+        flexDirection='column'
+        justifyContent='center'
+        alignItems='center'
+        >
             <Button
             onClick={() => {
                 setViewGames(!viewGames);
@@ -72,11 +78,7 @@ const Home = () => {
             }}
             w='300px'
             h='100px'
-            position='fixed'
-            top='0'
-            left='50%'
-            trans='translateX(-50%)'
-            margin='10px 0 0'
+            margin='10px 0 50px'
             >
                 {viewGames ? 'Join/Create Private Room' : 'See all games'}
             </Button>
@@ -84,18 +86,17 @@ const Home = () => {
             {viewGames ?
                 <Wrapper
                 w='100vw'
-                h='100vh'
-                padding='100px 0 0'
+                justifyContent='center'
                 >
                     <Games
                     socket={socket}
                     setViewGames={setViewGames}
                     setInput={setInput}
+                    windowWidth={windowWidth}
                     />
                 </Wrapper>
             :
                 <Wrapper
-                h='100vh'
                 alignItems='center'
                 justifyContent='center'
                 >
@@ -104,15 +105,15 @@ const Home = () => {
                             <P
                             fontS='18px'
                             >
-                                {modal}
+                                {modal.msg}
                             </P>
                             <Button
                             w='200px'
                             h='50px'
                             fontS='22px'
-                            onClick={createOrJoin ? handleJoinRoom : handleCreateRoom}
+                            onClick={modal.full ? () => setModal() : createOrJoin ? handleJoinRoom : handleCreateRoom}
                             >
-                                {createOrJoin ? 'Join Room' : 'Create Room'}
+                                {modal.full ? 'Continue' : createOrJoin ? 'Join Room' : 'Create Room'}
                             </Button>
                         </Modal>
                     }
@@ -120,9 +121,11 @@ const Home = () => {
                     <Form
                     input={input}
                     handleInput={handleInput}
+                    windowWidth={windowWidth}
                     >
                         <Wrapper
                         margin='25px 0 0'
+                        flexDirection={windowWidth < 600 ? 'column' : ''}
                         >
                             <Button
                             type='button'
@@ -145,7 +148,7 @@ const Home = () => {
                     </Form>
                 </Wrapper>
             }
-        </>
+        </Wrapper>
     )
 }
 

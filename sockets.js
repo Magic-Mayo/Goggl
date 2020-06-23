@@ -107,32 +107,42 @@ const verifyWords = (socket, wordsArr) => {
 const randomLetters = () => {
     const ltrArr = [];
     // const ltrArr = [
-    //     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-    //     'N', 'O', 'P', 'Qu', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
-    // ];
-
-    const ltrDice = [
-        ['A','A','E','E','G','N'],
-        ['A','B','B','J','O','O'],
-        ['A','C','H','O','P','S'],
-        ['A','F','F','K','P','S'],
-        ['A','O','O','T','T','W'],
-        ['C','I','M','O','T','U'],
-        ['D','E','I','L','R','X'],
-        ['D','E','L','R','V','Y'],
-        ['D','I','S','T','T','Y'],
-        ['E','E','G','H','N','W'],
-        ['E','E','I','N','S','U'],
-        ['E','H','R','T','V','W'],
-        ['E','I','O','S','S','T'],
-        ['E','L','R','T','T','Y'],
-        ['H','I','M','N','U','Qu'],
-        ['H','L','N','N','R','Z']
+        //     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+        //     'N', 'O', 'P', 'Qu', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+        // ];
+        
+        const ltrDice = [
+            ['A','A','E','E','G','N'],
+            ['A','B','B','J','O','O'],
+            ['A','C','H','O','P','S'],
+            ['A','F','F','K','P','S'],
+            ['A','O','O','T','T','W'],
+            ['C','I','M','O','T','U'],
+            ['D','E','I','L','R','X'],
+            ['D','E','L','R','V','Y'],
+            ['D','I','S','T','T','Y'],
+            ['E','E','G','H','N','W'],
+            ['E','E','I','N','S','U'],
+            ['E','H','R','T','V','W'],
+            ['E','I','O','S','S','T'],
+            ['E','L','R','T','T','Y'],
+            ['H','I','M','N','U','Qu'],
+            ['H','L','N','N','R','Z']
     ];
-
+    
     ltrDice.forEach(die => {
         ltrArr.push(die[Math.floor(Math.random() * 6)])
-    })
+    });
+
+    let currentIndex = ltrArr.length, temporaryValue, randomIndex;
+    
+    while (0 !== currentIndex) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+        temporaryValue = ltrArr[currentIndex];
+        ltrArr[currentIndex] = ltrArr[randomIndex];
+        ltrArr[randomIndex] = temporaryValue;
+    }
 
     return ltrArr;
 }
@@ -161,12 +171,10 @@ module.exports = io => {
         
         // create room
         socket.on('create-room', (room, createRoom) => {
+            const foundRoom = io.sockets.adapter.rooms[room];
+            
             // If room exists will ask user to confirm if they want to try and join
-            for(let key in io.sockets.adapter.rooms){
-                if(key === room){
-                    return createRoom({msg: 'Room already exists.  Would you like to request access?', room: room})
-                }
-            }
+            if(foundRoom) return createRoom({msg: 'Room already exists.  Would you like to request access?', room: room});
 
             // Leave all other rooms before joining
             for(let key in socket.rooms){
@@ -178,27 +186,21 @@ module.exports = io => {
             }
 
             socket.join(room, () => {
+                
                 clearInterval(emitGames);
                 socket.room = room;
-                socket.roomOwner = true;
                 createRoom({username: socket.username, score: 0});
             });
         });
         
         // join room
         socket.on('join-room', (room, joinRoom) => {
+            const foundRoom = io.sockets.adapter.rooms[room];
+            
             // Sends mesage back to user if room doesn't exist.  Will create new room with the name they used if confirmed
-            let foundRoom;
-            for(let key in io.sockets.adapter.rooms){
-                if(key === room){
-                    foundRoom = true;
-                    break;
-                }
-            }
-
-            if(!foundRoom){            
-                return joinRoom({msg: 'Room does not exist.  Would you like to create it?', room: room})
-            }
+            if(!foundRoom) return joinRoom({msg: 'Room does not exist.  Would you like to create it?', room: room});
+            
+            if(foundRoom.length > 7) return joinRoom({msg: 'Room is currently full! Try again later or join a different game!', full: true});
 
             // Leave all rooms before joining
             for(let key in socket.rooms){
@@ -209,17 +211,16 @@ module.exports = io => {
                     break;
                 }
             }
-
+            
             socket.join(room, () => {
                 socket.room = room;
-                socket.to(room).emit('chat', {msg: `${socket.username} has entered the room!`, username: 'SERVER UNDERLORDS'});
+                socket.to(room).emit('chat', {msg: `${socket.username} has entered the room!`});
                 joinRoom(findPlayersInRoom(io, socket));
             });
         });
 
         // Verify words and set score
         socket.on('word-list', (words, sendScore) => {
-            socket.ready = false;
             const newScore = verifyWords(socket, words);
             socket.to(socket.room).emit('scores', newScore);
             sendScore(newScore);
@@ -241,11 +242,19 @@ module.exports = io => {
         socket.on('ready', ready => {
             socket.ready = true;
 
+            socket.to(socket.room).emit('chat', {msg: `${socket.username} is ready!`});
+            
             if(playersReady(io, socket).length >= findPlayersInRoom(io, socket).length){
                 const newLetters = randomLetters();
                 ready(newLetters);
                 socket.to(socket.room).emit('new-letters', newLetters);
+                socket.ready = false;
             }
+        });
+        
+        socket.on('cancel-ready', cancel => {
+            socket.ready = false;
+            socket.to(socket.room).emit('chat', {msg: `${socket.username} has decided they actually weren't ready!`});
         })
 
         // send messages

@@ -18,7 +18,7 @@ export default ({children}) => {
     const [games, setGames] = useState([]);
     const [chat, setChat] = useState([]);
     const [updatedScores, setUpdatedScores] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     
     useEffect(() => {
         
@@ -27,7 +27,7 @@ export default ({children}) => {
         });
 
         socket.on('chat', chat => {
-            setChat(prevChat => [...prevChat, {msg: chat.msg, username: chat.username}]);
+            setChat(prevChat => [...prevChat, {msg: chat.msg, username: chat.username ? chat.username : 'server'}]);
         });
 
         socket.on('join', findPlayers => {

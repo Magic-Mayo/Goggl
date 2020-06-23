@@ -25,8 +25,9 @@ export default styled.button`
     max-width: ${({maxWidth}) => maxWidth || ''};
     align-items: ${({alignItems}) => alignItems || ''};
     left: ${({left}) => left || ''};
-    transform: ${({trans}) => trans || ''};
+    transform: ${({transForm}) => transForm || ''};
     top: ${({top}) => top || ''};
+    right: ${({right}) => right || ''};
     flex-direction: ${({flexDirection}) => flexDirection || ''};
     right: ${({right}) => right || ''};
 

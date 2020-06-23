@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import {Wrapper, Form, Input, P} from '../styledComponents';
 import { SocketContext } from '../../utils/Context';
 
-const ChatBox = ({socket, username}) => {
+const ChatBox = ({socket, username, windowWidth, showChat}) => {
     const [input, setInput] = useState('');
     const {chat, setChat} = useContext(SocketContext);
     
@@ -19,9 +19,13 @@ const ChatBox = ({socket, username}) => {
             flexDirection='column'
             alignItems='flex-end'
             justifyContent='space-between'
-            w='350px'
+            w={windowWidth < 600 ? '80vw' : '350px'}
             minWidth='250px'
             h='80vh'
+            position={windowWidth < 600 ? 'fixed' : ''}
+            right={windowWidth < 600 ? '50%' : ''}
+            top={windowWidth < 600 ? '50%' : ''}
+            transForm={windowWidth < 600 ? showChat ? 'translate(50%, -50%)' : 'translate(800px, -50%)' : ''}
             >
 
                 <Wrapper
@@ -32,6 +36,7 @@ const ChatBox = ({socket, username}) => {
                 justifyContent='flex-start'
                 bgColor='rgba(221,221,238,.9)'
                 overflowY='scroll'
+                overflowX='hidden'
                 className='scroller no-cursor'
                 >
                     {chat &&
@@ -39,13 +44,13 @@ const ChatBox = ({socket, username}) => {
                             <Wrapper
                             key={ind}
                             position='relative'
-                            transform={chat.username === username ? 'translateX(70px)' : ''}
+                            transForm={chat.username === username ? 'translateX(70px)' : chat.username === 'server' ? 'translateX(35px)' : ''}
                             w='80%'
                             borderRadius='10%'
                             margin='5px'
                             padding='0 7px'
-                            bgColor={chat.username === username ? '#2fc' : '#cf2'}
-                            justifyContent={chat.username === username ? 'flex-end' : 'flex-start'}
+                            bgColor={chat.username === username ? '#2fc' : chat.username === 'server' ? '#ccc' : '#cf2'}
+                            justifyContent={chat.username === username ? 'flex-end' : chat.username === 'server' ? 'center' : 'flex-start'}
                             >
                                 <P
                                 margin='5px'

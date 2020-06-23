@@ -1,14 +1,18 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 import { Wrapper, Button } from '../components/styledComponents';
 import GameTray from '../components/GameTray';
 import ScoreBox from '../components/ScoreBox';
 import ChatBox from '../components/ChatBox';
 import { SocketContext } from '../utils/Context';
+import { useInnerWidth } from '../utils/hooks';
 
 const Game = () => {
     const history = useHistory();
     const {socket, username, setPlayers} = useContext(SocketContext);
+    const windowWidth = useInnerWidth();
+    const [showChat, setShowChat] = useState(windowWidth < 600 ? false : true);
+    const [showScores, setShowScores] = useState(windowWidth < 600 ? false : true);
 
     const handleLeaveRoom = () => {
         socket.emit('leave-room', () => {
@@ -42,21 +46,49 @@ const Game = () => {
             <Wrapper
             w='100vw'
             h='100vh'
-            justifyContent='space-between'
-            alignItems='flex-end'
+            flexDirection={windowWidth < 600 ? 'column' : 'row'}
+            justifyContent={windowWidth < 600 ? 'center' : 'space-between'}
+            alignItems={windowWidth < 600 ? 'center' : 'flex-end'}
             padding='0 10px 30px'
             >
 
                 <ScoreBox
                 socket={socket}
+                windowWidth={windowWidth}
+                showScores={showScores}
                 />
 
-                <GameTray />
+                <GameTray
+                windowWidth={windowWidth}
+                />
 
                 <ChatBox
                 username={username}
                 socket={socket}
+                windowWidth={windowWidth}
+                showChat={showChat}
                 />
+
+                {windowWidth < 600 &&
+                    <Wrapper
+                    position='absolute'
+                    bottom='0'
+                    >
+                        <Button
+                        h='60px'
+                        onClick={() => setShowScores(prevState => !prevState)}
+                        >
+                            Scores
+                        </Button>
+
+                        <Button
+                        h='60px'
+                        onClick={() => setShowChat(prevState => !prevState)}
+                        >
+                            Chat
+                        </Button>
+                    </Wrapper>
+                }
             </Wrapper>
         </>
     )
