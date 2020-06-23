@@ -15,6 +15,7 @@ const Form = ({children, handleInput, input, windowWidth}) => {
         flexDirection='column'
         bgColor='rgba(50,50,50,.8)'
         w={windowWidth < 600 ? '80vw' : '40vw'}
+        minWidth={windowWidth < 600 ? '' : '450px'}
         h={windowWidth < 600 ? '70vh' : '50vh'}
         alignItems='center'
         borderRadius='10px'
