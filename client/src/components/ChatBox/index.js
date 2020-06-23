@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import {Wrapper, Form, Input, P} from '../styledComponents';
 import { SocketContext } from '../../utils/Context';
 
-const ChatBox = ({socket, username}) => {
+const ChatBox = ({socket, username, windowWidth, showChat}) => {
     const [input, setInput] = useState('');
     const {chat, setChat} = useContext(SocketContext);
     
@@ -22,6 +22,10 @@ const ChatBox = ({socket, username}) => {
             w='350px'
             minWidth='250px'
             h='80vh'
+            position={windowWidth < 600 ? 'fixed' : ''}
+            right={windowWidth < 600 ? '50%' : ''}
+            top={windowWidth < 600 ? '50%' : ''}
+            transForm={windowWidth < 600 ? showChat ? 'translate(50%, -50%)' : 'translate(600px, -50%)' : ''}
             >
 
                 <Wrapper
@@ -32,6 +36,7 @@ const ChatBox = ({socket, username}) => {
                 justifyContent='flex-start'
                 bgColor='rgba(221,221,238,.9)'
                 overflowY='scroll'
+                overflowX='hidden'
                 className='scroller no-cursor'
                 >
                     {chat &&
