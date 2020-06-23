@@ -16,7 +16,7 @@ const ScoreBox = ({windowWidth, showScores}) => {
         className='scroller no-cursor'
         overflowY='scroll'
         position={windowWidth < 600 ? 'fixed' : ''}
-        transForm={windowWidth < 600 ? showScores ? 'translate(-50%, -50%)' : 'translate(-600px, -50%)' : ''}
+        transForm={windowWidth < 600 ? showScores ? 'translate(-50%, -50%)' : 'translate(-800px, -50%)' : ''}
         left={windowWidth < 600 ? '50%' : ''}
         top={windowWidth < 600 ? '50%' : ''}
         >

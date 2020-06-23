@@ -19,13 +19,13 @@ const ChatBox = ({socket, username, windowWidth, showChat}) => {
             flexDirection='column'
             alignItems='flex-end'
             justifyContent='space-between'
-            w='350px'
+            w={windowWidth < 600 ? '80vw' : '350px'}
             minWidth='250px'
             h='80vh'
             position={windowWidth < 600 ? 'fixed' : ''}
             right={windowWidth < 600 ? '50%' : ''}
             top={windowWidth < 600 ? '50%' : ''}
-            transForm={windowWidth < 600 ? showChat ? 'translate(50%, -50%)' : 'translate(600px, -50%)' : ''}
+            transForm={windowWidth < 600 ? showChat ? 'translate(50%, -50%)' : 'translate(800px, -50%)' : ''}
             >
 
                 <Wrapper
