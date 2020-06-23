@@ -1,7 +1,7 @@
 import React, {useRef, useEffect} from 'react';
 import {Wrapper, Input, Label} from '../styledComponents';
 
-const Form = ({children, handleInput, input}) => {
+const Form = ({children, handleInput, input, windowWidth}) => {
     const ref = useRef();
 
     useEffect(() => {
@@ -14,8 +14,8 @@ const Form = ({children, handleInput, input}) => {
         <Wrapper
         flexDirection='column'
         bgColor='rgba(50,50,50,.8)'
-        w='40vw'
-        h='50vh'
+        w={windowWidth < 600 ? '80vw' : '40vw'}
+        h={windowWidth < 600 ? '70vh' : '50vh'}
         alignItems='center'
         borderRadius='10px'
         >
@@ -26,6 +26,7 @@ const Form = ({children, handleInput, input}) => {
                 Enter username
             </Label>
             <Input
+            w={windowWidth < 600 ? '75vw' : ''}
             placeholder={`If you don't enter one I will`}
             onChange={e => handleInput(e)}
             value={input.username}
@@ -33,20 +34,19 @@ const Form = ({children, handleInput, input}) => {
             ref={ref}
             />
 
-            <>
-                <Label
-                htmlFor='room'
-                fontS='32px'
-                >
-                    Enter room name
-                </Label>
-                <Input
-                placeholder='Room to join or create'
-                onChange={e => handleInput(e)}
-                value={input.room}
-                name='room'
-                />
-            </>
+            <Label
+            htmlFor='room'
+            fontS='32px'
+            >
+                Enter room name
+            </Label>
+            <Input
+            w={windowWidth < 600 ? '75vw' : ''}
+            placeholder='Room to join or create'
+            onChange={e => handleInput(e)}
+            value={input.room}
+            name='room'
+            />
 
             {children}
         </Wrapper>
