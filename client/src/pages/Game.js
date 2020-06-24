@@ -5,12 +5,12 @@ import GameTray from '../components/GameTray';
 import ScoreBox from '../components/ScoreBox';
 import ChatBox from '../components/ChatBox';
 import { SocketContext } from '../utils/Context';
-import { useInnerWidth } from '../utils/hooks';
+import { useWindowDimensions } from '../utils/hooks';
 
 const Game = () => {
     const history = useHistory();
     const {socket, username, isChatShowing, setPlayers, setIsChatShowing} = useContext(SocketContext);
-    const windowWidth = useInnerWidth();
+    const [windowWidth] = useWindowDimensions();
     const [showChat, setShowChat] = useState(windowWidth < 600 ? false : true);
     const [showScores, setShowScores] = useState(windowWidth < 600 ? false : true);
 
