@@ -15,3 +15,15 @@ export const useWindowDimensions = () => {
 
     return [innerWidth, innerHeight];
 }
+
+export const useBrowserTimeout = () => {
+    const [isMouseMoving, setIsMouseMoving] = useState(false);
+    const [isKeyPressed, setIsKeyPressed] = useState(false);
+
+    useEffect(() => {
+        window.addEventListener('mousemove', () => setIsMouseMoving(true))
+        window.addEventListener('keypress', () => setIsKeyPressed(true))
+    }, []);
+
+    return [isKeyPressed, isMouseMoving, setIsKeyPressed, setIsMouseMoving];
+}
