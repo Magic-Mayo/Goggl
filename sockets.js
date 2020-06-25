@@ -163,7 +163,8 @@ const getRandName = () => {
         'jim ',
         'cowardly ',
         'crazy ',
-        'brazen '
+        'brazen ',
+        'non-binary'
     ];
 
     const lastName = [
@@ -173,10 +174,14 @@ const getRandName = () => {
         'vegan',
         'bob',
         'gretch',
-        
+        'lady',
+        'man',
+        'boy',
+        'girl',
+        'woman'
     ];
 
-    return firstName[Math.floor(Math.random() * firstName.length)] + lastName[Math.floor(Math.random() * lastName.length)]
+    return firstName[Math.floor(Math.random() * firstName.length)] + lastName[Math.floor(Math.random() * lastName.length)];
 }
 
 module.exports = io => {
