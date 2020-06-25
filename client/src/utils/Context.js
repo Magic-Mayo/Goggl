@@ -1,5 +1,6 @@
 import React, {useState, useEffect, createContext} from 'react';
 import io from 'socket.io-client';
+import {useBrowserTimeout} from './hooks'
 
 let socket;
 
@@ -7,6 +8,10 @@ if(process.env.NODE_ENV === 'production'){
     socket = io();
 } else {
     socket = io(':3001');
+}
+
+const reconnectSocket = () => {
+    
 }
 
 export const SocketContext = createContext(null);
@@ -23,6 +28,9 @@ export default ({children}) => {
         showing: false,
         unread: 0
     });
+    const [isActive, setIsActive] = useState(true);
+    const [notConnected, setNotConnected] = useState(false);
+    const [isKeypressed, isMouseMoving, setKeypressed, setIsMouseMoving] = useBrowserTimeout();
     
     useEffect(() => {
         
@@ -55,6 +63,24 @@ export default ({children}) => {
 
     }, []);
 
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setIsActive(false);
+        }, 300000);
+
+        return () => clearTimeout(timer);
+    }, [isKeypressed, isMouseMoving]);
+
+    useEffect(() => {
+        const timedOut = setTimeout(() => {
+            socket.emit('timed-out', true, notActive => {
+                setNotConnected(true);
+            });
+        }, 60000);
+
+        return () => clearTimeout(timedOut)
+    }, [isActive])
+
     return (
         <SocketContext.Provider
         value={{
@@ -66,6 +92,7 @@ export default ({children}) => {
             username,
             games,
             chat,
+            notConnected,
             isChatShowing,
             setLoading,
             setUpdatedScores,
@@ -74,7 +101,8 @@ export default ({children}) => {
             setGames,
             setChat,
             setLetterArray,
-            setIsChatShowing
+            setIsChatShowing,
+            setNotConnected
         }}
         >
             {children}
