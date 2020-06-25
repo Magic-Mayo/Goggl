@@ -90,11 +90,13 @@ const Games = ({socket, setViewGames, setInput, windowWidth}) => {
                                 {game.room}
                             </P>
 
-                            <P
-                            fontS='24px'
-                            >
-                                {game.creator}
-                            </P>
+                            {windowWidth > 599 &&
+                                <P
+                                fontS='24px'
+                                >
+                                    {game.creator}
+                                </P>
+                            }
 
                             <P
                             fontS='24px'
