@@ -35,26 +35,24 @@ const ChatBox = ({socket, username, windowWidth, showChat}) => {
                 flexDirection='column'
                 justifyContent='flex-start'
                 bgColor='rgba(221,221,238,.9)'
-                overflowY='scroll'
+                overflowY='auto'
                 overflowX='hidden'
                 className='scroller no-cursor'
                 >
                     {chat &&
-                        chat.map((chat, ind) => (
+                        chat.map((chat, ind, arr) => (
                             <Wrapper
                             key={ind}
                             position='relative'
-                            transForm={chat.username === username ? 'translateX(70px)' : chat.username === 'server' ? 'translateX(35px)' : ''}
-                            w='80%'
-                            borderRadius='10%'
+                            w='100%'
                             margin='5px'
                             padding='0 7px'
-                            bgColor={chat.username === username ? '#2fc' : chat.username === 'server' ? '#ccc' : '#cf2'}
-                            justifyContent={chat.username === username ? 'flex-end' : chat.username === 'server' ? 'center' : 'flex-start'}
+                            justifyContent={chat.username === username ? 'flex-end' : chat.username === 'goggl' ? 'center' : 'flex-start'}
+                            borderBottom={ind === arr.length - 1 ? '' : arr[ind + 1].username === chat.username ? '' : '1px rgba(0,0,0,.5) solid'}
                             >
                                 <P
-                                margin='5px'
-                                fontColor={chat.username !== username ? '#000' : '#f3a'}
+                                margin='0 5px'
+                                padding='5px'
                                 >
                                     {chat.username !== username ? `${chat.username}: ${chat.msg}` : chat.msg}
                                 </P>
