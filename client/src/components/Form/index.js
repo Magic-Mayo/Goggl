@@ -19,6 +19,7 @@ const Form = ({children, handleInput, input, windowWidth}) => {
         h={windowWidth < 600 ? '70vh' : '50vh'}
         alignItems='center'
         borderRadius='10px'
+        minHeight='450px'
         >
             <Label
             htmlFor='username'
