@@ -27,13 +27,14 @@ export default styled.div`
     max-width: ${({maxWidth}) => maxWidth || ''};
     bottom: ${({bottom}) => bottom || ''};
     min-width: ${({minWidth}) => minWidth || ''};
+    min-height: ${({minHeight}) => minHeight || ''};
     color: ${({fontColor}) => fontColor || ''};
     z-index: ${({zIndex}) => zIndex || ''};
     overflow-y: ${({overflowY}) => overflowY || ''};
     overflow-x: ${({overflowX}) => overflowX || ''};
     border-radius: ${({borderRadius}) => borderRadius || ''};
     right: ${({right}) => right || ''};
-    transition: all .6s ease-in-out;
+    transition: transform .6s ease-in-out;
 
     .scroller::-webkit-scrollbar-thumb {
         width: 10px;
