@@ -32,7 +32,7 @@ export default ({children}) => {
 
         socket.on('chat', chat => {
             setIsChatShowing(prevState => ({...prevState, unread: prevState.showing ? prevState.unread : prevState.unread + 1}))
-            setChat(prevChat => [...prevChat, {msg: chat.msg, username: chat.username ? chat.username : 'server'}]);
+            setChat(prevChat => [...prevChat, {msg: chat.msg, username: chat.username ? chat.username : 'goggl'}]);
         });
 
         socket.on('join', findPlayers => {
