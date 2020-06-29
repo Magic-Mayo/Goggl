@@ -147,6 +147,38 @@ const randomLetters = () => {
     return ltrArr;
 }
 
+const getRandName = () => {
+    const firstName = [
+        'stinky ',
+        'slow ',
+        'quick ',
+        'adam ',
+        'gertrude ',
+        'whiny ',
+        'quiet ',
+        'bearded ',
+        'dirty ',
+        'fluffy ',
+        'self-absorbed ',
+        'jim ',
+        'cowardly ',
+        'crazy ',
+        'brazen '
+    ];
+
+    const lastName = [
+        'mike',
+        'animal',
+        'jim',
+        'vegan',
+        'bob',
+        'gretch',
+        
+    ];
+
+    return firstName[Math.floor(Math.random() * firstName.length)] + lastName[Math.floor(Math.random() * lastName.length)]
+}
+
 module.exports = io => {
 
     io.on('connection', socket =>{
@@ -155,7 +187,7 @@ module.exports = io => {
 
         // set username
         socket.on('set-username', (username, confirm) => {
-            socket.username = username;
+            socket.username = username || getRandName();
             confirm(socket.username)
         });
         
@@ -233,6 +265,7 @@ module.exports = io => {
 
         // Leave room
         socket.on('leave-room', confirmLeave => {
+            socket.ready = false;
             socket.leave(socket.room, () => {
                 confirmLeave(socket.room);
             });
@@ -264,9 +297,10 @@ module.exports = io => {
 
         socket.on('disconnect', () => {
             clearInterval(emitGames);
-            socket.leave(socket.room)
+            socket.leave(socket.room);
+            socket.ready = false;
             socket.broadcast.emit('user-disconnect', `${socket.username} has disconnected`);
-            socket.emit('You have disconnected')
+            socket.emit('You have disconnected');
         });
     })
 }

@@ -5,10 +5,11 @@ import Form from '../components/Form';
 import Modal from '../components/Modal';
 import Games from '../components/Games';
 import { SocketContext } from '../utils/Context';
-import { useInnerWidth } from '../utils/hooks';
+import { useWindowDimensions } from '../utils/hooks';
+import Loading from '../components/Loading';
 
 const Home = () => {
-    const {socket, setPlayers, setUsername} = useContext(SocketContext);
+    const {socket, loading, setPlayers, setUsername, setLoading} = useContext(SocketContext);
     const history = useHistory();
     const [input, setInput] = useState({
         room: '',
@@ -17,13 +18,10 @@ const Home = () => {
     const [modal, setModal] = useState();
     const [createOrJoin, setCreateOrJoin] = useState(false);
     const [viewGames, setViewGames] = useState(true);
-    const windowWidth = useInnerWidth();
+    const [windowWidth, windowHeight] = useWindowDimensions();
     
     const handleJoinRoom = () => {
         setCreateOrJoin(false);
-        if(!input.username){
-            return setInput();
-        }
         
         socket.emit('set-username', input.username, username => {
             setUsername(username);
@@ -41,9 +39,6 @@ const Home = () => {
     
     const handleCreateRoom = () => {
         setCreateOrJoin(true);
-        if(!input.username){
-            return setInput();
-        }
         
         socket.emit('set-username', input.username, username => {
             setUsername(username);

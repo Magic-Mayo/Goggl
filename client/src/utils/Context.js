@@ -19,6 +19,10 @@ export default ({children}) => {
     const [chat, setChat] = useState([]);
     const [updatedScores, setUpdatedScores] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [isChatShowing, setIsChatShowing] = useState({
+        showing: false,
+        unread: 0
+    });
     
     useEffect(() => {
         
@@ -27,6 +31,7 @@ export default ({children}) => {
         });
 
         socket.on('chat', chat => {
+            setIsChatShowing(prevState => ({...prevState, unread: prevState.showing ? prevState.unread : prevState.unread + 1}))
             setChat(prevChat => [...prevChat, {msg: chat.msg, username: chat.username ? chat.username : 'server'}]);
         });
 
@@ -61,13 +66,15 @@ export default ({children}) => {
             username,
             games,
             chat,
+            isChatShowing,
             setLoading,
             setUpdatedScores,
             setPlayers,
             setUsername,
             setGames,
             setChat,
-            setLetterArray
+            setLetterArray,
+            setIsChatShowing
         }}
         >
             {children}

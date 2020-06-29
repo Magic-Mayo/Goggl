@@ -5,12 +5,12 @@ import GameTray from '../components/GameTray';
 import ScoreBox from '../components/ScoreBox';
 import ChatBox from '../components/ChatBox';
 import { SocketContext } from '../utils/Context';
-import { useInnerWidth } from '../utils/hooks';
+import { useWindowDimensions } from '../utils/hooks';
 
 const Game = () => {
     const history = useHistory();
-    const {socket, username, setPlayers} = useContext(SocketContext);
-    const windowWidth = useInnerWidth();
+    const {socket, username, isChatShowing, setPlayers, setIsChatShowing} = useContext(SocketContext);
+    const [windowWidth] = useWindowDimensions();
     const [showChat, setShowChat] = useState(windowWidth < 600 ? false : true);
     const [showScores, setShowScores] = useState(windowWidth < 600 ? false : true);
 
@@ -27,7 +27,7 @@ const Game = () => {
         });
         
         return () => socket.emit('refresh-list', () => null)
-    }, [])
+    }, []);
 
     return (
         <>
@@ -83,9 +83,26 @@ const Game = () => {
 
                         <Button
                         h='60px'
-                        onClick={() => setShowChat(prevState => !prevState)}
+                        onClick={() => {
+                            setShowChat(prevState => !prevState);
+                            setIsChatShowing(prevState => ({unread: showChat ? 0 : prevState, showing: !prevState.showing}));
+                        }}
+                        position='relative'
                         >
                             Chat
+                            {!isChatShowing.showing && isChatShowing.unread > 0 &&
+                                <Wrapper
+                                bgColor='red'
+                                borderRadius='50%'
+                                w='40px'
+                                h='40px'
+                                position='absolute'
+                                top='-16px'
+                                right='-16px'
+                                >
+                                    {isChatShowing.unread}
+                                </Wrapper>
+                            }
                         </Button>
                     </Wrapper>
                 }
