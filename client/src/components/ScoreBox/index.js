@@ -14,7 +14,7 @@ const ScoreBox = ({windowWidth, showScores}) => {
         flexDirection='column'
         justifyContent='flex-start'
         className='scroller no-cursor'
-        overflowY='scroll'
+        overflowY='auto'
         position={windowWidth < 600 ? 'fixed' : ''}
         transForm={windowWidth < 600 ? showScores ? 'translate(-50%, -50%)' : 'translate(-800px, -50%)' : ''}
         left={windowWidth < 600 ? '50%' : ''}
