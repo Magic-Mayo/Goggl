@@ -78,7 +78,7 @@ const Tray = ({windowWidth}) => {
             if(updatedScores.length && updatedScores.length >= players.length){
                 const newScores = [];
                 
-                updatedScores.map(score => {
+                updatedScores.forEach(score => {
                     prevScores.forEach(player => {
                         if(player.username === score.username){
                             score.score += player.score;
@@ -137,7 +137,6 @@ const Tray = ({windowWidth}) => {
         flexDirection='column'
         alignItems='center'
         justifyContent={loading ? 'center' : 'space-evenly'}
-        justifyContent='space-evenly'
         position={windowWidth < 600 ? '' : 'fixed'}
         left='50%'
         top='50%'

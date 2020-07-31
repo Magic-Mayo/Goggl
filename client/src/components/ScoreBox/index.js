@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Wrapper, P, Button } from '../styledComponents';
+import { Wrapper, P } from '../styledComponents';
 import { SocketContext } from '../../utils/Context';
 
 const ScoreBox = ({windowWidth, showScores}) => {
