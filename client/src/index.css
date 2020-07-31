@@ -5,9 +5,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: url('letter-cutouts.jpg') no-repeat;
-  /* background-size: cover; */
-  background-position: 50% 40%;
+  background: url('letter-cutouts.webp') no-repeat;
+  background-position: 50% 50%;
+  background-attachment: fixed;
 }
 
 * {
@@ -15,11 +15,17 @@ body {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
 
 a {
     color: #000000;
     text-decoration: none;
+}
+
+@media screen and (min-width: 1100px){
+    body {
+        background-size: 120vw;
+    }
 }
