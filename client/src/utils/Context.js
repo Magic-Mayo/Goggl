@@ -4,15 +4,14 @@ import {useBrowserTimeout} from './hooks'
 
 let socket;
 
-if(process.env.NODE_ENV === 'production'){
-    socket = io();
-} else {
-    socket = io(':3001');
-}
 
-const reconnectSocket = () => {
-    
-}
+const connectSocket = () => {
+    if(process.env.NODE_ENV === 'production'){
+        socket = io();
+    } else {
+        socket = io(':3001');
+    }
+};
 
 export const SocketContext = createContext(null);
 
@@ -30,8 +29,21 @@ export default ({children}) => {
     });
     const [isActive, setIsActive] = useState(true);
     const [notConnected, setNotConnected] = useState(false);
-    const [isKeypressed, isMouseMoving, setKeypressed, setIsMouseMoving] = useBrowserTimeout();
+    const [isKeypressed, isMouseMoving, setIsKeypressed, setIsMouseMoving] = useBrowserTimeout();
+
+    const resetActive = () => {
+        setIsMouseMoving(false);
+        setIsKeypressed(false);
+        setNotConnected(false);
+        setIsActive(true);
+    }
     
+    useEffect(() => {
+        if(!notConnected || !socket) connectSocket();
+
+        return () => socket.emit('disconnect', true);
+    }, [notConnected])
+
     useEffect(() => {
         
         socket.on('games-list', gameList => {
@@ -64,22 +76,32 @@ export default ({children}) => {
     }, []);
 
     useEffect(() => {
-        const timer = setTimeout(() => {
-            setIsActive(false);
-        }, 300000);
+        if((isKeypressed || isMouseMoving) && isActive){
+            const timer = setTimeout(() => {
+                setIsActive(false);
+                setIsMouseMoving(false);
+                setIsKeypressed(false);
+            }, 3000);
 
-        return () => clearTimeout(timer);
+            return () => clearTimeout(timer);
+        }
     }, [isKeypressed, isMouseMoving]);
 
     useEffect(() => {
-        const timedOut = setTimeout(() => {
-            socket.emit('timed-out', true, notActive => {
-                setNotConnected(true);
-            });
-        }, 60000);
+        if(!isActive){
+            const timedOut = setTimeout(() => {
+                socket.emit('timed-out', true, notActive => {
+                    setNotConnected(notActive);
+                });
 
-        return () => clearTimeout(timedOut)
-    }, [isActive])
+            }, 1200);
+
+            return () => clearTimeout(timedOut);
+        } else {
+            setIsMouseMoving(false);
+            setIsKeypressed(false);
+        }
+    }, [isActive]);
 
     return (
         <SocketContext.Provider
@@ -92,6 +114,7 @@ export default ({children}) => {
             username,
             games,
             chat,
+            isActive,
             notConnected,
             isChatShowing,
             setLoading,
@@ -102,7 +125,7 @@ export default ({children}) => {
             setChat,
             setLetterArray,
             setIsChatShowing,
-            setNotConnected
+            resetActive
         }}
         >
             {children}
