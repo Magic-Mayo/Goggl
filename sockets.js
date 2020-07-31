@@ -270,9 +270,14 @@ module.exports = io => {
 
         // Leave room
         socket.on('leave-room', confirmLeave => {
+            const room = socket.room;
             socket.ready = false;
             socket.leave(socket.room, () => {
                 confirmLeave(socket.room);
+                
+                //add emit to tell room user left
+                socket.to(room).emit('user-left', socket.username);
+                socket.to(room).emit('chat', {msg: `${socket.username} has left the room!`});
             });
         });
 
@@ -290,6 +295,7 @@ module.exports = io => {
             }
         });
         
+        // cancels ready condition
         socket.on('cancel-ready', cancel => {
             socket.ready = false;
             socket.to(socket.room).emit('chat', {msg: `${socket.username} has decided they actually weren't ready!`});
@@ -299,6 +305,12 @@ module.exports = io => {
         socket.on('chat', msg => {
             socket.to(socket.room).emit('chat', {username: socket.username, msg: msg});
         });
+
+        // disconnects socket if user is inactive too long
+        socket.on('timed-out', (disconnect, notifyClient) => {
+            notifyClient(true);
+            socket.disconnect();
+        })
 
         socket.on('disconnect', () => {
             clearInterval(emitGames);
