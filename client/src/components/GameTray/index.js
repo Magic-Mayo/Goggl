@@ -92,7 +92,7 @@ const Tray = ({windowWidth}) => {
 
             return prevScores;
         });
-    }, [updatedScores]);
+    }, [updatedScores, players.length]);
 
     useEffect(() => {
         if(letterArray.length > 0) startCoutdown();

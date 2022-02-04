@@ -42,7 +42,7 @@ export default ({children}) => {
         if(!notConnected || !socket) connectSocket();
 
         return () => socket.emit('disconnect', true);
-    }, [notConnected])
+    }, [notConnected]);
 
     useEffect(() => {
         
@@ -71,6 +71,8 @@ export default ({children}) => {
             socket.off('game-scores');
             socket.off('players-in-room');
             socket.off('games-list');
+            socket.off('new-letters');
+            socket.off('scores');
         }
 
     }, []);
@@ -78,9 +80,7 @@ export default ({children}) => {
     useEffect(() => {
         if((isKeypressed || isMouseMoving) && isActive){
             const timer = setTimeout(() => {
-                setIsActive(false);
-                setIsMouseMoving(false);
-                setIsKeypressed(false);
+                resetActive();
             }, 3000);
 
             return () => clearTimeout(timer);
@@ -98,8 +98,7 @@ export default ({children}) => {
 
             return () => clearTimeout(timedOut);
         } else {
-            setIsMouseMoving(false);
-            setIsKeypressed(false);
+            resetActive();
         }
     }, [isActive]);
 
