@@ -1,13 +1,17 @@
 import React, {useState, useEffect, createContext} from 'react';
 import io from 'socket.io-client';
+import {useBrowserTimeout} from './hooks'
 
 let socket;
 
-if(process.env.NODE_ENV === 'production'){
-    socket = io();
-} else {
-    socket = io(':3001');
-}
+
+const connectSocket = () => {
+    if(process.env.NODE_ENV === 'production'){
+        socket = io();
+    } else {
+        socket = io(':3001');
+    }
+};
 
 export const SocketContext = createContext(null);
 
@@ -23,7 +27,23 @@ export default ({children}) => {
         showing: false,
         unread: 0
     });
+    const [isActive, setIsActive] = useState(true);
+    const [notConnected, setNotConnected] = useState(false);
+    const [isKeypressed, isMouseMoving, setIsKeypressed, setIsMouseMoving] = useBrowserTimeout();
+
+    const resetActive = () => {
+        setIsMouseMoving(false);
+        setIsKeypressed(false);
+        setNotConnected(false);
+        setIsActive(true);
+    }
     
+    useEffect(() => {
+        if(!notConnected || !socket) connectSocket();
+
+        return () => socket.emit('disconnect', true);
+    }, [notConnected]);
+
     useEffect(() => {
         
         socket.on('games-list', gameList => {
@@ -51,9 +71,36 @@ export default ({children}) => {
             socket.off('game-scores');
             socket.off('players-in-room');
             socket.off('games-list');
+            socket.off('new-letters');
+            socket.off('scores');
         }
 
     }, []);
+
+    useEffect(() => {
+        if((isKeypressed || isMouseMoving) && isActive){
+            const timer = setTimeout(() => {
+                resetActive();
+            }, 3000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [isKeypressed, isMouseMoving]);
+
+    useEffect(() => {
+        if(!isActive){
+            const timedOut = setTimeout(() => {
+                socket.emit('timed-out', true, notActive => {
+                    setNotConnected(notActive);
+                });
+
+            }, 1200);
+
+            return () => clearTimeout(timedOut);
+        } else {
+            resetActive();
+        }
+    }, [isActive]);
 
     return (
         <SocketContext.Provider
@@ -66,6 +113,8 @@ export default ({children}) => {
             username,
             games,
             chat,
+            isActive,
+            notConnected,
             isChatShowing,
             setLoading,
             setUpdatedScores,
@@ -74,7 +123,8 @@ export default ({children}) => {
             setGames,
             setChat,
             setLetterArray,
-            setIsChatShowing
+            setIsChatShowing,
+            resetActive
         }}
         >
             {children}

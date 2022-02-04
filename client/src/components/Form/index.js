@@ -14,8 +14,8 @@ const Form = ({children, handleInput, input, windowWidth}) => {
         <Wrapper
         flexDirection='column'
         bgColor='rgba(50,50,50,.8)'
-        w={windowWidth < 600 ? '80vw' : '40vw'}
-        minWidth={windowWidth < 600 ? '' : '450px'}
+        w={windowWidth < 500 ? '70vw' : '40vw'}
+        minWidth={windowWidth < 500 ? '' : '450px'}
         h={windowWidth < 600 ? '70vh' : '50vh'}
         alignItems='center'
         borderRadius='10px'
@@ -27,7 +27,7 @@ const Form = ({children, handleInput, input, windowWidth}) => {
                 Enter username
             </Label>
             <Input
-            w={windowWidth < 600 ? '75vw' : ''}
+            w={windowWidth < 500 ? '80%' : ''}
             placeholder={`If you don't enter one I will`}
             onChange={e => handleInput(e)}
             value={input.username}
@@ -42,7 +42,7 @@ const Form = ({children, handleInput, input, windowWidth}) => {
                 Enter room name
             </Label>
             <Input
-            w={windowWidth < 600 ? '75vw' : ''}
+            w={windowWidth < 500 ? '80%' : ''}
             placeholder='Room to join or create'
             onChange={e => handleInput(e)}
             value={input.room}

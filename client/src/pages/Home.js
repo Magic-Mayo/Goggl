@@ -1,15 +1,14 @@
 import React, {useState, useContext} from 'react';
 import {useHistory} from 'react-router-dom';
-import {Wrapper, Input, Button, P, Label} from '../components/styledComponents';
+import {Wrapper, Button, P} from '../components/styledComponents';
 import Form from '../components/Form';
 import Modal from '../components/Modal';
 import Games from '../components/Games';
 import { SocketContext } from '../utils/Context';
 import { useWindowDimensions } from '../utils/hooks';
-import Loading from '../components/Loading';
 
 const Home = () => {
-    const {socket, loading, setPlayers, setUsername, setLoading} = useContext(SocketContext);
+    const {socket, setPlayers, setUsername} = useContext(SocketContext);
     const history = useHistory();
     const [input, setInput] = useState({
         room: '',
@@ -68,7 +67,7 @@ const Home = () => {
             <Button
             onClick={() => {
                 setViewGames(!viewGames);
-                setInput({username: '', room: ''})
+                setInput({username: '', room: ''});
                 setModal();
             }}
             w='300px'
@@ -120,7 +119,7 @@ const Home = () => {
                     >
                         <Wrapper
                         margin='25px 0 0'
-                        flexDirection={windowWidth < 600 ? 'column' : ''}
+                        flexDirection={windowWidth < 500 ? 'column' : ''}
                         >
                             <Button
                             type='button'
