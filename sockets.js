@@ -144,7 +144,12 @@ const randomLetters = () => {
         ltrArr[randomIndex] = temporaryValue;
     }
 
-    return ltrArr;
+    const newArr = [[],[],[],[]];
+
+    for(let i = 0; i < ltrArr.length; i++){
+        newArr[Math.floor(i/4)].push(ltrArr[i]);
+    }
+    return newArr;
 }
 
 const getRandName = () => {

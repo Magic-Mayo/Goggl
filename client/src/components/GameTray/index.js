@@ -15,27 +15,22 @@ const Tray = ({windowWidth}) => {
         time: 3
     });
 
-    const handleClick = ind => {
+    const handleClick = (indOne, indTwo) => {
         setError();
         setChosenLetters(prevLetters => {
-            const newArr = [...prevLetters];
-            const index = newArr.indexOf(ind);
+            let newArr = [...prevLetters];
 
-            // checks if letter in same position is in state
-            if(prevLetters.includes(ind)){
-                
-                // checks if it was the last letter clicked
-                if(index === newArr.length - 1 || index === newArr.length - 2){
-                    // if it was the last or next to last letter remove it
-                    newArr.pop()
-                    return newArr;
-                } else {
-                    // if not the last letter clicked then just return that letter
-                    return [ind];
-                }
-
+            if(
+                newArr.length === 0 ||
+                Math.abs(indOne - newArr[newArr.length - 1][0]) > 1 ||
+                Math.abs(indTwo - newArr[newArr.length - 1][1]) > 1
+            ){
+                newArr = [[indOne, indTwo]];
             }
-            return [...prevLetters, ind]
+            else if(newArr.filter(ltr => ltr[0] === indOne && ltr[1] === indTwo).length > 0){}
+            else newArr.push([indOne, indTwo]);
+
+            return newArr;
         });
     }
 
@@ -214,22 +209,23 @@ const Tray = ({windowWidth}) => {
                     borderRadius='20px'
                     margin='0 0 20px'
                     >
-                        {letterArray.map((letter, ind) => (
+                        {letterArray.map((letter, indOne) =>
+                            letter.map((ltr, indTwo) => (
                             <Button
-                            key={ind}
+                            key={`${indOne}${indTwo}`}
                             w={windowWidth < 600 ? '75px' : ''}
                             h={windowWidth < 600 ? '75px' : ''}
                             margin={windowWidth < 600 ? '7px' : ''}
-                            onClick={() => handleClick(ind)}
+                            onClick={() => handleClick(indOne,indTwo)}
                             border='1px solid #fff'
-                            bgColor={chosenLetters.includes(ind) ? '#00509c' : '#fcfcfa'}
-                            fontColor={chosenLetters.includes(ind) ? '#fcfcfa' : '#00509c'}
+                            bgColor={chosenLetters.filter(ltr => ltr[0] === indOne && ltr[1] === indTwo).length > 0 ? '#00509c' : '#fcfcfa'}
+                            fontColor={chosenLetters.filter(ltr => ltr[0] === indOne && ltr[1] === indTwo).length > 0 ? '#fcfcfa' : '#00509c'}
                             fontS='50px'
                             fontW='bold'
                             >
-                                {letter}
+                                {ltr}
                             </Button>
-                        ))}
+                        )))}
                     </Wrapper>
 
                     <Wrapper
