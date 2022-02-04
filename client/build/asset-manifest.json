@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/static/css/main.69117d5e.css",
+    "main.js": "/static/js/main.b35a46cd.js",
+    "static/media/letter-cutouts.webp": "/static/media/letter-cutouts.de8d5ae1e1d949a37512.webp",
+    "index.html": "/index.html",
+    "main.69117d5e.css.map": "/static/css/main.69117d5e.css.map",
+    "main.b35a46cd.js.map": "/static/js/main.b35a46cd.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.69117d5e.css",
+    "static/js/main.b35a46cd.js"
+  ]
+}
