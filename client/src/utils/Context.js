@@ -9,7 +9,7 @@ const connectSocket = () => {
     if(process.env.NODE_ENV === 'production'){
         socket = io();
     } else {
-        socket = io(':3001');
+        socket = io({path: '/family-feud'});
     }
 };
 
