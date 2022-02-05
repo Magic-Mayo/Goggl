@@ -7,7 +7,7 @@ let socket;
 
 const connectSocket = () => {
     if(process.env.NODE_ENV === 'production'){
-        socket = io({path: '/family-feud'});
+        socket = io({path: '/goggl'});
     } else {
         socket = io(':3001');
     }
