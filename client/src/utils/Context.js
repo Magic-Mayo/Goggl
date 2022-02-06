@@ -4,13 +4,13 @@ import {useBrowserTimeout} from './hooks'
 
 let socket;
 
-const connectSocket = () => {
+// const connectSocket = () => {
     if(process.env.NODE_ENV === 'production'){
         socket = io({path: '/goggl/socket.io'});
     } else {
         socket = io(':3001');
     }
-};
+// };
 
 export const SocketContext = createContext(null);
 
@@ -37,11 +37,11 @@ export default ({children}) => {
         setIsActive(true);
     }
 
-    useEffect(() => {
-        if(notConnected || !socket) connectSocket();
+    // useEffect(() => {
+    //     if(notConnected || !socket) connectSocket();
 
-        return () => socket.close();
-    }, [notConnected]);
+    //     return () => socket.close();
+    // }, [notConnected]);
 
     useEffect(() => {
         socket.on('games-list', gameList => {

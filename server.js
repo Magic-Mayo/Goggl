@@ -13,7 +13,7 @@ app.use(express.static(ENV === "production" ? "client/build" : "client/public"))
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, `./client/${ENV === "production" ? 'build' : 'public'}/index.html`)));
 
 const server = http.createServer(app);
-const io = socketIo(server, ENV === '' ? {} : {
+const io = socketIo(server, ENV === 'production' ? {} : {
     cors: {
         origin: "http://localhost:3000",
         methods: ["GET", "POST"]
