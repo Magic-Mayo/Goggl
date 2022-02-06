@@ -35,26 +35,28 @@ export default ({children}) => {
     }, [setSocket]);
 
     useEffect(() => {
-        socket.on('games-list', gameList => {
-            setGames(gameList);
-        });
+        if(socket !== undefined){
+            socket.on('games-list', gameList => {
+                setGames(gameList);
+            });
 
-        socket.on('chat', chat => {
-            setIsChatShowing(prevState => ({...prevState, unread: prevState.showing ? prevState.unread : prevState.unread + 1}))
-            setChat(prevChat => [...prevChat, {msg: chat.msg, username: chat.username ? chat.username : 'server'}]);
-        });
+            socket.on('chat', chat => {
+                setIsChatShowing(prevState => ({...prevState, unread: prevState.showing ? prevState.unread : prevState.unread + 1}))
+                setChat(prevChat => [...prevChat, {msg: chat.msg, username: chat.username ? chat.username : 'server'}]);
+            });
 
-        socket.on('join', findPlayers => {
-            setPlayers(findPlayers);
-        });
+            socket.on('join', findPlayers => {
+                setPlayers(findPlayers);
+            });
 
-        socket.on('scores', playerScores => {
-            setUpdatedScores(prevUpdatedScores => [...prevUpdatedScores, playerScores]);
-        });
+            socket.on('scores', playerScores => {
+                setUpdatedScores(prevUpdatedScores => [...prevUpdatedScores, playerScores]);
+            });
 
-        socket.on('new-letters', newLetters => {
-            setLetterArray(newLetters);
-        });
+            socket.on('new-letters', newLetters => {
+                setLetterArray(newLetters);
+            });
+        }
 
         return () => {
             socket.off('game-scores');
@@ -64,7 +66,7 @@ export default ({children}) => {
             socket.off('scores');
         }
 
-    }, []);
+    }, [socket]);
 
     useEffect(() => {
         if((isKeypressed || isMouseMoving) && isActive){
