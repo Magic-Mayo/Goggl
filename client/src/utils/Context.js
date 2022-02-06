@@ -31,7 +31,7 @@ export default ({children}) => {
     useEffect(() => {
         setSocket(() => process.env.NODE_ENV === 'production' ? io({path: '/goggl/socket.io'}) : io(':3001'));
 
-        return () => socket.close();
+        return () => socket !== undefined ? socket.close() : null;
     }, [setSocket]);
 
     useEffect(() => {
