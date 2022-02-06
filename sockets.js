@@ -249,7 +249,6 @@ module.exports = io => {
 
         // Verify words and set score
         socket.on('word-list', (words, sendScore) => {
-            console.log(words)
             const newScore = verifyWords(socket, words);
             socket.to(socket.room).emit('scores', newScore);
             sendScore(newScore);

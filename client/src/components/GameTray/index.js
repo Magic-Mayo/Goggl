@@ -102,7 +102,7 @@ const Tray = ({windowWidth}) => {
         
         if(countdown.time < 1){
             setCountdown({time: 3, isOn: false});
-            setTimer(20);
+            setTimer(120);
             clearInterval(countdownInterval);
             setShowBoard(true);
             return setLoading(false);
