@@ -29,7 +29,7 @@ export default ({children}) => {
     }
 
     useEffect(() => {
-        setSocket(() => process.env.NODE_ENV === 'production' ? io('http://127.0.0.1:3001', {path: '/goggl/socket.io', }) : io(':3001'));
+        setSocket(() => process.env.NODE_ENV === 'production' ? io({path: '/goggl/socket.io'}) : io(':3001'));
 
         return () => socket !== undefined ? socket.close() : null;
     }, [setSocket]);

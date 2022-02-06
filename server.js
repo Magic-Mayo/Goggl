@@ -12,7 +12,12 @@ app.use(express.static(process.env.NODE_ENV === "production" ? "client/build" : 
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, `./client/${process.env.NODE_ENV === "production" ? 'build' : 'public'}/index.html`)));
 
 const server = http.createServer(app);
-const io = socketIo(server);
+const io = socketIo(server, {
+    cors: {
+        origin: "http://localhost:3001",
+        methods: ["GET", "POST"]
+    }
+});
 
 events(io);
 
