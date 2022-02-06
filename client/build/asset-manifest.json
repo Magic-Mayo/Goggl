@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/goggl/static/css/main.7119e0ed.css",
-    "main.js": "/goggl/static/js/main.880c9785.js",
+    "main.js": "/goggl/static/js/main.d6e4ddab.js",
     "static/media/letter-cutouts.webp": "/goggl/static/media/letter-cutouts.de8d5ae1e1d949a37512.webp",
     "index.html": "/goggl/index.html",
     "main.7119e0ed.css.map": "/goggl/static/css/main.7119e0ed.css.map",
-    "main.880c9785.js.map": "/goggl/static/js/main.880c9785.js.map"
+    "main.d6e4ddab.js.map": "/goggl/static/js/main.d6e4ddab.js.map"
   },
   "entrypoints": [
     "static/css/main.7119e0ed.css",
-    "static/js/main.880c9785.js"
+    "static/js/main.d6e4ddab.js"
   ]
 }
