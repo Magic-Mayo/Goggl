@@ -2,10 +2,19 @@ import React, {useState, useEffect, createContext} from 'react';
 import io from 'socket.io-client';
 import {useBrowserTimeout} from './hooks'
 
+let socket;
+
+const connectSocket = () => {
+    if(process.env.NODE_ENV === 'production'){
+        socket = io({path: '/goggl/socket.io'});
+    } else {
+        socket = io(':3001');
+    }
+};
+
 export const SocketContext = createContext(null);
 
 export default ({children}) => {
-    const [socket, setSocket] = useState();
     const [letterArray, setLetterArray] = useState([]);
     const [players, setPlayers] = useState([]);
     const [username, setUsername] = useState('');
@@ -29,46 +38,42 @@ export default ({children}) => {
     }
 
     useEffect(() => {
-        setSocket(() => process.env.NODE_ENV === 'production' ? io({path: '/goggl/socket.io'}) : io(':3001'));
+        if(notConnected || !socket) connectSocket();
 
-        return () => socket !== undefined ? socket.close() : null;
-    }, [setSocket]);
+        return () => socket.emit('disconnect', true);
+    }, [notConnected]);
 
     useEffect(() => {
-        if(socket !== undefined){
-            socket.on('games-list', gameList => {
-                setGames(gameList);
-            });
+        socket.on('games-list', gameList => {
+            setGames(gameList);
+        });
 
-            socket.on('chat', chat => {
-                setIsChatShowing(prevState => ({...prevState, unread: prevState.showing ? prevState.unread : prevState.unread + 1}))
-                setChat(prevChat => [...prevChat, {msg: chat.msg, username: chat.username ? chat.username : 'server'}]);
-            });
+        socket.on('chat', chat => {
+            setIsChatShowing(prevState => ({...prevState, unread: prevState.showing ? prevState.unread : prevState.unread + 1}))
+            setChat(prevChat => [...prevChat, {msg: chat.msg, username: chat.username ? chat.username : 'server'}]);
+        });
 
-            socket.on('join', findPlayers => {
-                setPlayers(findPlayers);
-            });
+        socket.on('join', findPlayers => {
+            setPlayers(findPlayers);
+        });
 
-            socket.on('scores', playerScores => {
-                setUpdatedScores(prevUpdatedScores => [...prevUpdatedScores, playerScores]);
-            });
+        socket.on('scores', playerScores => {
+            setUpdatedScores(prevUpdatedScores => [...prevUpdatedScores, playerScores]);
+        });
 
-            socket.on('new-letters', newLetters => {
-                setLetterArray(newLetters);
-            });
-        }
+        socket.on('new-letters', newLetters => {
+            setLetterArray(newLetters);
+        });
 
         return () => {
-            if(socket !== undefined){
-                socket.off('game-scores');
-                socket.off('players-in-room');
-                socket.off('games-list');
-                socket.off('new-letters');
-                socket.off('scores');
-            }
+            socket.off('game-scores');
+            socket.off('players-in-room');
+            socket.off('games-list');
+            socket.off('new-letters');
+            socket.off('scores');
         }
 
-    }, [socket]);
+    }, []);
 
     useEffect(() => {
         if((isKeypressed || isMouseMoving) && isActive){
