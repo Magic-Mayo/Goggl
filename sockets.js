@@ -192,7 +192,6 @@ const getRandName = () => {
 module.exports = io => {
 
     io.on('connection', socket =>{
-        socket.leave(socket.id);
         findRooms(io, socket);
 
         // set username
@@ -228,7 +227,6 @@ module.exports = io => {
             }
 
             socket.join(room, () => {
-                
                 clearInterval(emitGames);
                 socket.room = room;
                 createRoom({username: socket.username, score: 0});
