@@ -59,11 +59,13 @@ export default ({children}) => {
         }
 
         return () => {
-            socket.off('game-scores');
-            socket.off('players-in-room');
-            socket.off('games-list');
-            socket.off('new-letters');
-            socket.off('scores');
+            if(socket !== undefined){
+                socket.off('game-scores');
+                socket.off('players-in-room');
+                socket.off('games-list');
+                socket.off('new-letters');
+                socket.off('scores');
+            }
         }
 
     }, [socket]);
