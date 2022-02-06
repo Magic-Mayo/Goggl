@@ -169,7 +169,7 @@ const getRandName = () => {
         'cowardly ',
         'crazy ',
         'brazen ',
-        'non-binary'
+        'non-binary '
     ];
 
     const lastName = [
