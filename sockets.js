@@ -227,7 +227,6 @@ module.exports = io => {
             }
 
             socket.join(room, () => {
-                socket.leave(socket.id);
                 clearInterval(emitGames);
                 socket.room = room;
                 createRoom({username: socket.username, score: 0});
