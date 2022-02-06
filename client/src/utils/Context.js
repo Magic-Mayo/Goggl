@@ -1,5 +1,5 @@
 import React, {useState, useEffect, createContext} from 'react';
-import io from 'socket.io-client';
+import {io} from 'socket.io-client';
 import {useBrowserTimeout} from './hooks'
 
 let socket;
@@ -40,7 +40,7 @@ export default ({children}) => {
     useEffect(() => {
         if(notConnected || !socket) connectSocket();
 
-        return () => socket.emit('disconnect', true);
+        return () => socket.close();
     }, [notConnected]);
 
     useEffect(() => {
