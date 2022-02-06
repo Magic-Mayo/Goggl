@@ -20,7 +20,7 @@ const Game = () => {
         });
 
     }
-    
+
     useEffect(() => {
         socket.emit('players-in-room', getPlayers => {
             setPlayers(getPlayers);

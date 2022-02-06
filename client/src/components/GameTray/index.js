@@ -39,7 +39,7 @@ const Tray = ({windowWidth}) => {
 
         setWordList(prevWords => {
             const newWord = []
-            chosenLetters.forEach(letter => newWord.push(letterArray[letter]));
+            chosenLetters.forEach(([indOne, indTwo]) => newWord.push(letterArray[indOne][indTwo]));
 
             return [...prevWords, newWord.join('')]
         })
@@ -102,7 +102,7 @@ const Tray = ({windowWidth}) => {
         
         if(countdown.time < 1){
             setCountdown({time: 3, isOn: false});
-            setTimer(120);
+            setTimer(20);
             clearInterval(countdownInterval);
             setShowBoard(true);
             return setLoading(false);
