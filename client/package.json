@@ -10,7 +10,6 @@
     "socket.io-client": "^4.4.1",
     "styled-components": "^5.1.0"
   },
-  "proxy": "http://localhost:3001",
   "homepage": "/goggl",
   "scripts": {
     "start": "react-scripts start",

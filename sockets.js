@@ -1,4 +1,4 @@
-const wordList = require('./wordlist.json');
+import wordList from './wordlist.js';
 
 const findRooms = (io, socket) => {
     const rooms = io.sockets.adapter.rooms;
@@ -10,11 +10,27 @@ const findRooms = (io, socket) => {
     const ns = io.of("/");
     const gameList = [];
 
-    for(let room in rooms){
-        const firstId = Object.keys(rooms[room].sockets)[0];
-        const firstUser = ns.connected[firstId].username;
-        gameList.push({room: room, creator: firstUser, numPlayers: rooms[room].length})
-    }
+    rooms.forEach((room, i) => {
+        const [firstUser] = room;
+        const roomObj = {
+            room: i
+        };
+
+        room.forEach((user, i) => {
+            const {username} = ns.sockets.get(user)
+            // const {username} = ns.connected[user];
+            if(i === firstUser) roomObj.creator = username;
+            roomObj.user = username;
+        });
+
+        gameList.push(roomObj);
+    });
+
+    // for(let room in rooms){
+    //     const firstId = Object.keys(rooms[room].sockets)[0];
+    //     const firstUser = ns.connected[firstId].username;
+    //     gameList.push({room: room, creator: firstUser, numPlayers: rooms[room].length})
+    // }
 
     return socket.emit('games-list', gameList);
 }
@@ -187,9 +203,10 @@ const getRandName = () => {
     return firstName[Math.floor(Math.random() * firstName.length)] + lastName[Math.floor(Math.random() * lastName.length)];
 }
 
-module.exports = io => {
+export default io => {
 
     io.on('connection', socket => {
+        socket.leave(socket.id);
         findRooms(io, socket);
 
         // set username
@@ -205,7 +222,9 @@ module.exports = io => {
         
         // create room
         socket.on('create-room', (room, createRoom) => {
-            const foundRoom = io.sockets.adapter.rooms[room];
+            const rooms = io.sockets.adapter.rooms;
+            let foundRoom;
+            rooms.forEach((val, key) => key === room && (foundRoom = true));
 
             // If room exists will ask user to confirm if they want to try and join
             if(foundRoom) return createRoom({msg: 'Room already exists.  Would you like to request access?', room: room});
@@ -225,8 +244,10 @@ module.exports = io => {
         
         // join room
         socket.on('join-room', async (room, joinRoom) => {
-            const foundRoom = io.sockets.adapter.rooms[room];
-            
+            const rooms = io.sockets.adapter.rooms;
+            let foundRoom;
+            rooms.forEach((val, key) => key === room && (foundRoom = true));
+
             // Sends mesage back to user if room doesn't exist.  Will create new room with the name they used if confirmed
             if(!foundRoom) return joinRoom({msg: 'Room does not exist.  Would you like to create it?', room: room});
             
