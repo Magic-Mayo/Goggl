@@ -11,6 +11,7 @@ const Games = ({socket, setViewGames, setInput, windowWidth}) => {
     }
 
     const handleRefresh = () => {
+        console.log('refresh')
         socket.emit('refresh-list', () => {
             return;
         })
@@ -26,7 +27,7 @@ const Games = ({socket, setViewGames, setInput, windowWidth}) => {
         padding='0 20px'
         >
             <Button
-            onClick={handleRefresh}
+            onClick={() => handleRefresh()}
             w='50px'
             h='50px'
             borderRadius='50%'
@@ -34,6 +35,7 @@ const Games = ({socket, setViewGames, setInput, windowWidth}) => {
             boxShadow='none'
             fontS='16px'
             fontColor='white'
+            type='button'
             >
                 Refresh
             </Button>

@@ -26,7 +26,7 @@ const Game = () => {
             setPlayers(getPlayers);
         });
         
-        return () => socket.emit('refresh-list', () => null)
+        return () => socket.emit('refresh-list')
     }, []);
 
     return (
