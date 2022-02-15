@@ -203,9 +203,9 @@ const getRandName = () => {
     return firstName[Math.floor(Math.random() * firstName.length)] + lastName[Math.floor(Math.random() * lastName.length)];
 }
 
-export default io => {
+export default (io, ns) => {
 
-    io.on('connection', socket => {
+    io.of(ns ? '/goggl' : '/').on('connection', socket => {
         socket.leave(socket.id);
         findRooms(io, socket);
 
