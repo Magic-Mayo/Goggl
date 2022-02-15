@@ -3,5 +3,5 @@ const path = '/home/pi/projects';
 
 export const routes = app => {
     app.use(express.static())
-    app.get('*', (req, res) => res.sendFile(`${path}/goggl/public/index.html`));
+    app.get('*', (req, res) => res.sendFile(`${path}/Goggl/public/index.html`));
 }
