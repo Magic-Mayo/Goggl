@@ -7,7 +7,7 @@ import {BrowserRouter as Router} from 'react-router-dom';
 import SocketContext from './utils/Context';
 
 ReactDOM.render(
-    <Router>
+    <Router basename={process.env.NODE_ENV === 'production' ? '/goggl' : ''}>
         <SocketContext>
             <App />
         </SocketContext>

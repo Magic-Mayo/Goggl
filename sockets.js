@@ -1,4 +1,4 @@
-const wordList = require('./wordlist.json');
+import wordList from './wordlist.js';
 
 const findRooms = (io, socket) => {
     const rooms = io.sockets.adapter.rooms;
@@ -10,35 +10,49 @@ const findRooms = (io, socket) => {
     const ns = io.of("/");
     const gameList = [];
 
-    for(let room in rooms){
-        const firstId = Object.keys(rooms[room].sockets)[0];
-        const firstUser = ns.connected[firstId].username;
-        gameList.push({room: room, creator: firstUser, numPlayers: rooms[room].length})
-    }
+    rooms.forEach((room, i) => {
+        const [firstUser] = room;
+        const roomObj = {
+            room: i
+        };
+
+        room.forEach((user, i) => {
+            const {username} = ns.sockets.get(user)
+            // const {username} = ns.connected[user];
+            if(i === firstUser) roomObj.creator = username;
+            roomObj.user = username;
+        });
+
+        gameList.push(roomObj);
+    });
+
+    // for(let room in rooms){
+    //     const firstId = Object.keys(rooms[room].sockets)[0];
+    //     const firstUser = ns.connected[firstId].username;
+    //     gameList.push({room: room, creator: firstUser, numPlayers: rooms[room].length})
+    // }
 
     return socket.emit('games-list', gameList);
 }
 
-const findPlayersInRoom = (io, socket) => {
+const findPlayersInRoom = async (io, socket) => {
     const players = [];
-    const room = io.sockets.adapter.rooms[socket.room].sockets;
-    const user = io.of('/').connected;
+    const room = await io.in(socket.room).fetchSockets();
 
-    for(let player in room){
-        players.push({username: user[player].username, score: 0});
+    for(let player of room){
+        players.push({username: player.username, score: 0});
     }
 
     return players;
 }
 
-const playersReady = (io, socket) => {
+const playersReady = async (io, socket) => {
     const players = [];
-    const room = io.sockets.adapter.rooms[socket.room].sockets;
-    const user = io.of('/').connected;
-
-    for(let player in room){
-        if(user[player].ready){
-            players.push({username: user[player].username, ready: socket.ready});
+    const room = await io.in(socket.room).fetchSockets();
+    
+    for(let player of room){
+        if(player.ready){
+            players.push({username: player.username, ready: socket.ready});
         }
     }
 
@@ -189,9 +203,9 @@ const getRandName = () => {
     return firstName[Math.floor(Math.random() * firstName.length)] + lastName[Math.floor(Math.random() * lastName.length)];
 }
 
-module.exports = io => {
+export default (io, ns) => {
 
-    io.on('connection', socket =>{
+    io.of(ns ? '/goggl' : '/').on('connection', socket => {
         socket.leave(socket.id);
         findRooms(io, socket);
 
@@ -201,11 +215,6 @@ module.exports = io => {
             socket.username = username || getRandName();
             confirm(socket.username)
         });
-        
-        // send refreshed room list every minute
-        const emitGames = setInterval(() => {
-            findRooms(io, socket);
-        }, 60000);
 
         // Refreshes game list on landing page manually
         socket.on('refresh-list', () => {
@@ -214,35 +223,32 @@ module.exports = io => {
         
         // create room
         socket.on('create-room', (room, createRoom) => {
-	    console.log('creat');
-            const foundRoom = io.sockets.adapter.rooms[room];
-            
+            const rooms = io.sockets.adapter.rooms;
+            let foundRoom;
+            rooms.forEach((val, key) => key === room && (foundRoom = true));
+
             // If room exists will ask user to confirm if they want to try and join
             if(foundRoom) return createRoom({msg: 'Room already exists.  Would you like to request access?', room: room});
 
             // Leave all other rooms before joining
             for(let key in socket.rooms){
                 if(key !== socket.room){
-                    socket.leave(key, (err) => {
-                        if(err) throw err;
-                    });
+                    socket.leave(key);
                 }
             }
 
-            socket.join(room, () => {
-                
-                clearInterval(emitGames);
-                socket.room = room;
-		console.log(room);
-                createRoom({username: socket.username, score: 0});
-            });
+            socket.join(room);
+            socket.room = room;
+            findRooms(io, socket);
+            createRoom({username: socket.username, score: 0});
         });
         
         // join room
-        socket.on('join-room', (room, joinRoom) => {
-	    console.log('join');
-            const foundRoom = io.sockets.adapter.rooms[room];
-            
+        socket.on('join-room', async (room, joinRoom) => {
+            const rooms = io.sockets.adapter.rooms;
+            let foundRoom;
+            rooms.forEach((val, key) => key === room && (foundRoom = true));
+
             // Sends mesage back to user if room doesn't exist.  Will create new room with the name they used if confirmed
             if(!foundRoom) return joinRoom({msg: 'Room does not exist.  Would you like to create it?', room: room});
             
@@ -251,18 +257,16 @@ module.exports = io => {
             // Leave all rooms before joining
             for(let key in socket.rooms){
                 if(key !== socket.room){
-                    socket.leave(key, (err) => {
-                        if(err) throw err
-                    });
+                    socket.leave(key);
                     break;
                 }
             }
             
-            socket.join(room, () => {
-                socket.room = room;
-                socket.to(room).emit('chat', {msg: `${socket.username} has entered the room!`});
-                joinRoom(findPlayersInRoom(io, socket));
-            });
+            socket.join(room)
+            socket.room = room;
+            socket.to(room).emit('chat', {msg: `${socket.username} has entered the room!`});
+            const playersInRoom = await findPlayersInRoom(io, socket);
+            joinRoom(playersInRoom);
         });
 
         // Verify words and set score
@@ -273,30 +277,33 @@ module.exports = io => {
         });
 
         // 
-        socket.on('players-in-room', joined => {
-            socket.to(socket.room).emit('join', findPlayersInRoom(io, socket));
+        socket.on('players-in-room', async joined => {
+            const playersInRoom = await findPlayersInRoom(io, socket);
+            socket.to(socket.room).emit('join', playersInRoom);
         });
 
         // Leave room
         socket.on('leave-room', confirmLeave => {
             const room = socket.room;
             socket.ready = false;
-            socket.leave(socket.room, () => {
-                confirmLeave(socket.room);
-                
-                //add emit to tell room user left
-                socket.to(room).emit('user-left', socket.username);
-                socket.to(room).emit('chat', {msg: `${socket.username} has left the room!`});
-            });
+            socket.leave(socket.room);
+            confirmLeave(socket.room);
+            findRooms(io, socket);
+            
+            //add emit to tell room user left
+            socket.to(room).emit('user-left', socket.username);
+            socket.to(room).emit('chat', {msg: `${socket.username} has left the room!`});
         });
 
         // Send new set of letters
-        socket.on('ready', ready => {
+        socket.on('ready', async ready => {
             socket.ready = true;
 
             socket.to(socket.room).emit('chat', {msg: `${socket.username} is ready!`});
-            
-            if(playersReady(io, socket).length >= findPlayersInRoom(io, socket).length){
+            const playersInRoom = await findPlayersInRoom(io, socket);
+            const playersReadyInRoom = await playersReady(io, socket);
+
+            if(playersReadyInRoom.length >= playersInRoom.length){
                 const newLetters = randomLetters();
                 ready(newLetters);
                 socket.to(socket.room).emit('new-letters', newLetters);
@@ -322,7 +329,7 @@ module.exports = io => {
         })
 
         socket.on('disconnect', () => {
-            clearInterval(emitGames);
+            findRooms(io, socket);
             socket.leave(socket.room);
             socket.ready = false;
             socket.broadcast.emit('user-disconnect', `${socket.username} has disconnected`);

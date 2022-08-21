@@ -41,6 +41,7 @@ const Home = () => {
         
         socket.emit('set-username', input.username, username => {
             setUsername(username);
+            console.log('hi')
             socket.emit('create-room', input.room, create => {
 		console.log(create);
                 if(create.msg){

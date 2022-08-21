@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/goggl/static/css/main.7119e0ed.css",
+    "main.js": "/goggl/static/js/main.490053c9.js",
+    "static/media/letter-cutouts.webp": "/goggl/static/media/letter-cutouts.de8d5ae1e1d949a37512.webp",
+    "index.html": "/goggl/index.html",
+    "main.7119e0ed.css.map": "/goggl/static/css/main.7119e0ed.css.map",
+    "main.490053c9.js.map": "/goggl/static/js/main.490053c9.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.7119e0ed.css",
+    "static/js/main.490053c9.js"
+  ]
+}

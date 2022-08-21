@@ -6,6 +6,7 @@ import Loading from '../Loading';
 const Tray = ({windowWidth}) => {
     const {socket, letterArray, loading, players, updatedScores, setPlayers, setLetterArray, setUpdatedScores, setLoading} = useContext(SocketContext);
     const [chosenLetters, setChosenLetters] = useState([]);
+    const [ready, setReady] = useState(false);
     const [wordList, setWordList] = useState([]);
     const [showBoard, setShowBoard] = useState(false);
     const [error, setError] = useState();
@@ -39,7 +40,7 @@ const Tray = ({windowWidth}) => {
 
         setWordList(prevWords => {
             const newWord = []
-            chosenLetters.forEach(letter => newWord.push(letterArray[letter]));
+            chosenLetters.forEach(([indOne, indTwo]) => newWord.push(letterArray[indOne][indTwo]));
 
             return [...prevWords, newWord.join('')]
         })
@@ -48,11 +49,13 @@ const Tray = ({windowWidth}) => {
 
     const handleReady = () => {
         setLoading(true);
+        setReady(true);
         socket.emit('ready', letters => setLetterArray(letters));
     }
     
     const handleCancelReady = () => {
         setLoading(false);
+        setReady(false);
         socket.emit('cancel-ready', letters => setLetterArray(letters));
     }
 
@@ -156,7 +159,7 @@ const Tray = ({windowWidth}) => {
                     </P>
                 </Wrapper>
             }
-            {letterArray.length === 0 && loading &&
+            {ready && loading &&
                 <>
                     <Button
                     w='275px'
@@ -169,7 +172,7 @@ const Tray = ({windowWidth}) => {
                     <Loading />
                 </>
             }
-            {!showBoard &&
+            {!ready && !showBoard &&
                 <Button
                 w='275px'
                 h='75px'

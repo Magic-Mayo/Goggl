@@ -20,13 +20,13 @@ const Game = () => {
         });
 
     }
-    
+
     useEffect(() => {
         socket.emit('players-in-room', getPlayers => {
             setPlayers(getPlayers);
         });
         
-        return () => socket.emit('refresh-list', () => null)
+        return () => socket.emit('refresh-list')
     }, []);
 
     return (

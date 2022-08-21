@@ -1,21 +1,12 @@
 import React, {useState, useEffect, createContext} from 'react';
-import io from 'socket.io-client';
+import {io} from 'socket.io-client';
 import {useBrowserTimeout} from './hooks'
 
-let socket;
-
-
-const connectSocket = () => {
-    if(process.env.NODE_ENV === 'production'){
-        socket = io({path: '/games/goggl/socket.io'});
-    } else {
-        socket = io(':3001');
-    }
-};
+const socket = io({path: '/games/goggl/socket.io'});
 
 export const SocketContext = createContext(null);
 
-export default ({children}) => {
+const Context = ({children}) => {
     const [letterArray, setLetterArray] = useState([]);
     const [players, setPlayers] = useState([]);
     const [username, setUsername] = useState('');
@@ -28,7 +19,7 @@ export default ({children}) => {
         unread: 0
     });
     const [isActive, setIsActive] = useState(true);
-    const [notConnected, setNotConnected] = useState(false);
+    const [notConnected, setNotConnected] = useState(true);
     const [isKeypressed, isMouseMoving, setIsKeypressed, setIsMouseMoving] = useBrowserTimeout();
 
     const resetActive = () => {
@@ -37,15 +28,8 @@ export default ({children}) => {
         setNotConnected(false);
         setIsActive(true);
     }
-    
-    useEffect(() => {
-        if(!notConnected || !socket) connectSocket();
-
-        return () => socket.emit('disconnect', true);
-    }, [notConnected]);
 
     useEffect(() => {
-        
         socket.on('games-list', gameList => {
             setGames(gameList);
         });
@@ -130,4 +114,6 @@ export default ({children}) => {
             {children}
         </SocketContext.Provider>
     )
-} 
+}
+
+export default Context;
