@@ -197,6 +197,7 @@ module.exports = io => {
 
         // set username
         socket.on('set-username', (username, confirm) => {
+	    console.log('name');
             socket.username = username || getRandName();
             confirm(socket.username)
         });
@@ -213,6 +214,7 @@ module.exports = io => {
         
         // create room
         socket.on('create-room', (room, createRoom) => {
+	    console.log('creat');
             const foundRoom = io.sockets.adapter.rooms[room];
             
             // If room exists will ask user to confirm if they want to try and join
@@ -231,12 +233,14 @@ module.exports = io => {
                 
                 clearInterval(emitGames);
                 socket.room = room;
+		console.log(room);
                 createRoom({username: socket.username, score: 0});
             });
         });
         
         // join room
         socket.on('join-room', (room, joinRoom) => {
+	    console.log('join');
             const foundRoom = io.sockets.adapter.rooms[room];
             
             // Sends mesage back to user if room doesn't exist.  Will create new room with the name they used if confirmed

@@ -52,14 +52,14 @@ const App = () => {
                 </Modal>
             }
             <Switch>
-                <Route exact path='/'>
+                <Route exact path='/games/goggl/'>
                     <Home />
                 </Route>
-                <Route path='/game'>
-                    {!username && <Redirect to='/' />}
+                <Route path='/games/goggl/game'>
+                    {!username && <Redirect to='/games/goggl/' />}
                     <Game />
                 </Route>
-                <Redirect to='/' />
+                <Redirect to='/games/goggl/' />
             </Switch>
         </>    
     );

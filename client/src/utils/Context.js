@@ -7,7 +7,7 @@ let socket;
 
 const connectSocket = () => {
     if(process.env.NODE_ENV === 'production'){
-        socket = io({path: '/goggl/socket.io'});
+        socket = io({path: '/games/goggl/socket.io'});
     } else {
         socket = io(':3001');
     }

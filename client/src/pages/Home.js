@@ -42,13 +42,14 @@ const Home = () => {
         socket.emit('set-username', input.username, username => {
             setUsername(username);
             socket.emit('create-room', input.room, create => {
+		console.log(create);
                 if(create.msg){
                     setInput(prevInput => ({...prevInput, room: create.room}));
                     return setModal(create);
                 }
 
                 setPlayers([create]);
-                history.push('/game');
+                history.push('/games/goggl/game');
             });
         });
     }

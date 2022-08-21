@@ -10,7 +10,7 @@
     "socket.io-client": "^4.4.1",
     "styled-components": "^5.1.0"
   },
-  "homepage": "/goggl",
+  "homepage": "/games/goggl",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
